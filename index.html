@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Thrylox — Game Development Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Thrylox is an independent game development studio building high-quality cross-platform games with cinematic visuals and fair, transparent distribution." />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", -sans-serif;
+      background-color: #050816;
+      color: #f5f5f5;
+      line-height: 1.6;
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 24px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-size: 13px;
+      opacity: 0.8;
+      text-align: right;
+    }
+    h1 {
+      font-size: 32px;
+      margin: 0 0 10px;
+    }
+    h2 {
+      font-size: 20px;
+      margin-top: 32px;
+      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9dd5ff;
+    }
+    p {
+      margin: 4px 0 10px;
+      font-size: 15px;
+    }
+    .block {
+      background: rgba(8, 20, 40, 0.94);
+      border: 1px solid rgba(104, 158, 255, 0.25);
+      border-radius: 14px;
+      padding: 16px 18px 14px;
+      margin-bottom: 14px;
+    }
+    ul {
+      margin: 6px 0 6px 18px;
+      padding: 0;
+      font-size: 14px;
+    }
+    .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      opacity: 0.6;
+      letter-spacing: 0.12em;
+    }
+    .highlight {
+      color: #9dd5ff;
+      font-weight: 500;
+    }
+    a {
+      color: #9dd5ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 11px;
+      opacity: 0.6;
+    }
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .tagline {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="logo">THRYLOX</div>
+      <div class="tagline">
+        Independent Game Development Studio<br />
+        Cross-platform • Digital-only • Remote-first
+      </div>
+    </header>
+
+    <section class="block">
+      <div class="label">About</div>
+      <h1>Thrylox Game Studio</h1>
+      <p>
+        Thrylox is an independent game development studio focused on
+        <span class="highlight">high-quality collectible and tactical experiences</span>
+        built with Unreal Engine for mobile and other digital platforms.
+      </p>
+      <p>
+        Our mission is to combine cinematic visuals, accessible gameplay and transparent
+        monetization into long-lasting live games.
+      </p>
+    </section>
+
+    <section class="block">
+      <div class="label">Primary product</div>
+      <h2>Flagship Project</h2>
+      <p>
+        Thrylox is currently developing its first title: a cross-platform, session-based strategy game
+        with collectible heroes and deep team-building mechanics.
+      </p>
+      <ul>
+        <li>Built on <span class="highlight">Unreal Engine</span> with high-fidelity 3D figurines.</li>
+        <li>Designed for <span class="highlight">iOS and Android</span>, with the option to scale to PC and other platforms.</li>
+        <li>Live-ops ready architecture, analytics-driven balancing and content updates.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <div class="label">Distribution model</div>
+      <h2>Distribution & Monetization</h2>
+      <ul>
+        <li>Digital-only distribution via official storefronts (Apple App Store, Google Play, PC platforms and partner stores).</li>
+        <li>Free-to-play model with optional in-app purchases (cosmetics, collections, expansions).</li>
+        <li>No gray channels or third-party key resellers.</li>
+        <li>Compliance with platform policies, KYC/AML requirements of payment providers and applicable regulations.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <div class="label">Operations</div>
+      <h2>Studio & Operations</h2>
+      <ul>
+        <li>Founders: experienced product, analytics and game industry specialists.</li>
+        <li>Remote-first team with contractors and partners across the EU and other regions.</li>
+        <li>Using industry-standard tools: Unreal Engine, GitHub, CI/CD, modern analytics stack.</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <div class="label">Contact</div>
+      <h2>Contact & Business Inquiries</h2>
+      <p>
+        For banking, compliance and partnership questions, please contact:
+      </p>
+      <p>
+        Email: <a href="mailto:admin@thrylox.com">admin@thrylox.com</a> &nbsp;|&nbsp;
+        <a href="mailto:info@thrylox.com">info@thrylox.com</a>
+      </p>
+      <p>
+        Official domain: <span class="highlight">thrylox.com</span>
+      </p>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Thrylox. All rights reserved.
+      <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    </footer>
+  </div>
+</body>
+</html>
