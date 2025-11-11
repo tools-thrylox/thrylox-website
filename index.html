@@ -14,13 +14,16 @@
       color: #f5f5f5;
       line-height: 1.6;
     }
+
     a {
       color: #9dd5ff;
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
+
     .page {
       max-width: 1100px;
       margin: 0 auto;
@@ -28,14 +31,17 @@
     }
 
     /* TOP NAV */
+
     .topbar-wrap {
       position: sticky;
       top: 0;
       z-index: 40;
       backdrop-filter: blur(14px);
-      background: radial-gradient(circle at top, rgba(157,213,255,0.16), rgba(5,8,22,0.96));
+      -webkit-backdrop-filter: blur(14px);
+      background: radial-gradient(circle at top, rgba(157,213,255,0.16), rgba(5,8,22,0.98));
       border-bottom: 1px solid rgba(157,213,255,0.16);
     }
+
     .topbar {
       max-width: 1100px;
       margin: 0 auto;
@@ -45,12 +51,14 @@
       justify-content: space-between;
       gap: 18px;
     }
+
     .logo {
       font-weight: 700;
       font-size: 20px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
     }
+
     .nav-links {
       display: flex;
       gap: 14px;
@@ -60,23 +68,26 @@
       letter-spacing: 0.11em;
       opacity: 0.9;
     }
+
     .nav-links a {
-      text-decoration: none;
       padding-bottom: 2px;
       border-bottom: 1px solid transparent;
     }
+
     .nav-links a:hover {
       border-bottom-color: #9dd5ff;
     }
 
     /* HERO */
+
     .hero {
       padding: 40px 0 32px;
       display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(180px, 2fr);
+      grid-template-columns: minmax(0, 3fr) minmax(220px, 2fr);
       gap: 26px;
       align-items: center;
     }
+
     .hero-kicker {
       font-size: 11px;
       text-transform: uppercase;
@@ -84,45 +95,69 @@
       letter-spacing: 0.16em;
       margin-bottom: 6px;
     }
+
     .hero-title {
       font-size: 32px;
       font-weight: 600;
       margin: 0 0 10px;
     }
+
     .hero-sub {
       font-size: 15px;
       opacity: 0.92;
       margin: 0 0 10px;
     }
+
     .hero-note {
       font-size: 11px;
       opacity: 0.7;
+      margin: 0;
     }
+
+    /* HERO ART */
+
     .hero-art {
       height: 180px;
       border-radius: 18px;
       border: 1px solid rgba(157,213,255,0.32);
-      background:
-        radial-gradient(circle at top left, rgba(157,213,255,0.24), transparent),
-        radial-gradient(circle at bottom right, rgba(123,86,255,0.22), transparent),
-        linear-gradient(145deg, #040713, #070b1f);
+      overflow: hidden;
+      position: relative;
       box-shadow: 0 14px 40px rgba(0,0,0,0.6);
-      display: flex;
-      align-items: flex-end;
-      padding: 12px 14px;
-      font-size: 11px;
-      opacity: 0.96;
     }
-    .hero-art span {
+
+    .hero-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
-      color: #9dd5ff;
+    }
+
+    .hero-art-caption {
+      position: absolute;
+      right: 12px;
+      bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 10px;
       font-size: 10px;
+      line-height: 1.4;
+      color: #f5f5f5;
+      background: rgba(5, 8, 22, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(157,213,255,0.32);
+    }
+
+    .hero-art-label {
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
+      font-size: 8px;
+      opacity: 0.9;
+      color: #9dd5ff;
       margin-bottom: 2px;
     }
 
     /* CONTENT BLOCKS */
+
     h2 {
       font-size: 19px;
       margin-top: 26px;
@@ -131,29 +166,34 @@
       text-transform: uppercase;
       color: #9dd5ff;
     }
+
     p {
       margin: 4px 0 10px;
       font-size: 14px;
     }
-        .block {
+
+    .block {
       background: rgba(8, 20, 40, 0.96);
       border: 1px solid rgba(104, 158, 255, 0.25);
       border-radius: 14px;
       padding: 14px 16px 12px;
       margin-bottom: 12px;
-      scroll-margin-top: 90px; /* чтобы якорь не прятался под шапкой */
+      scroll-margin-top: 90px; /* якорь не уезжает под шапку */
     }
+
     ul {
       margin: 6px 0 6px 18px;
       padding: 0;
       font-size: 13px;
     }
+
     .label {
       font-size: 10px;
       text-transform: uppercase;
       opacity: 0.6;
       letter-spacing: 0.12em;
     }
+
     .highlight {
       color: #9dd5ff;
       font-weight: 500;
@@ -174,10 +214,12 @@
         grid-template-columns: 1fr;
         gap: 16px;
       }
+
       .hero-art {
         order: -1;
-        height: 130px;
+        height: 160px;
       }
+
       .nav-links {
         gap: 10px;
       }
@@ -213,10 +255,13 @@
           This site provides an overview for platforms, publishers, banks and service providers evaluating Thrylox.
         </p>
       </div>
+
       <div class="hero-art">
-        <div>
-          <span>Flagship project</span>
-          Stylized tactical arena with collectible figurines, built on Unreal Engine for mobile and beyond.
+        <img src="/hero-thrylox.png"
+             alt="Stylized tactical sci-fi arena city with collectible heroes">
+        <div class="hero-art-caption">
+          <div class="hero-art-label">Flagship project</div>
+          Stylized sci-fi arena with collectible heroes — key art mood for Thrylox.
         </div>
       </div>
     </section>
@@ -254,19 +299,19 @@
     <!-- DISTRIBUTION -->
     <section id="distribution" class="block">
       <div class="label">Distribution model</div>
-      <h2>Distribution & Monetization</h2>
+      <h2>Distribution &amp; Monetization</h2>
       <ul>
         <li>Digital-only distribution via official storefronts (Apple App Store, Google Play, PC platforms and partner stores).</li>
         <li>Free-to-play with optional in-app purchases (cosmetics, collections, expansions).</li>
         <li>No gray channels or third-party key resellers.</li>
-        <li>Compliance with platform policies and applicable KYC/AML & sanctions regulations.</li>
+        <li>Compliance with platform policies and applicable KYC/AML &amp; sanctions regulations.</li>
       </ul>
     </section>
 
     <!-- STUDIO -->
     <section id="studio" class="block">
       <div class="label">Operations</div>
-      <h2>Studio & Operations</h2>
+      <h2>Studio &amp; Operations</h2>
       <ul>
         <li>Founders: experienced product, analytics and game industry specialists.</li>
         <li>Remote-first team with contractors and partners across the EU and other regions.</li>
@@ -277,7 +322,7 @@
     <!-- COMPANY DETAILS -->
     <section id="company" class="block">
       <div class="label">Company details</div>
-      <h2>Legal & Compliance</h2>
+      <h2>Legal &amp; Compliance</h2>
       <p>
         Thrylox is operated by an independent game development company registered in the European Union.
         Full statutory details (legal entity name, registration number, registered address and tax ID)
@@ -307,7 +352,7 @@
     <!-- CONTACT -->
     <section id="contact" class="block">
       <div class="label">Contact</div>
-      <h2>Contact & Business Inquiries</h2>
+      <h2>Contact &amp; Business Inquiries</h2>
       <p>For banking, compliance and partnership questions, please contact:</p>
       <p>
         Email: <a href="mailto:admin@thrylox.com">admin@thrylox.com</a> &nbsp;|&nbsp;
