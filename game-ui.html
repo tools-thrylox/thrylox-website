@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thrylox — Game UI</title>
+<meta name="description" content="Thrylox mobile-game style UI demo: collectible figurines, tactical arena, studio and company info." />
+<style>
+  :root{
+    --bg:#050816;
+    --panel:#0b1224;
+    --glass:rgba(13,20,38,.55);
+    --line:rgba(157,213,255,.28);
+    --accent:#9dd5ff;
+    --accent2:#7b56ff;
+    --good:#4be477;
+    --warn:#ffd166;
+  }
+  /* Page background with drifting glow particles */
+  html,body{height:100%}
+  body{
+    margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,Inter,sans-serif;
+    background:
+      radial-gradient(1200px 800px at 10% -10%, #0b1430 0%, transparent 60%),
+      radial-gradient(900px 700px at 120% 10%, #0c162f 0%, transparent 55%),
+      var(--bg);
+    color:#e9eef7; overflow-x:hidden;
+  }
+  .particles::before,.particles::after{
+    content:"";position:fixed;inset:-10% -10% auto -10%;height:160%;
+    background:
+      radial-gradient(6px 6px at 10% 20%, rgba(157,213,255,.22) 40%, transparent 41%) repeat,
+      radial-gradient(8px 8px at 70% 60%, rgba(123,86,255,.18) 40%, transparent 41%) repeat;
+    background-size:240px 240px, 320px 320px;
+    filter:blur(1px);opacity:.35;pointer-events:none;
+    animation: drift 22s linear infinite;
+  }
+  .particles::after{animation-duration:38s;opacity:.25;transform:scale(1.2)}
+  @keyframes drift{to{transform:translateY(-8%) translateX(4%)}}
+
+  /* Phone-like container (but responsive) */
+  .wrap{max-width:420px;margin:20px auto 40px;padding:16px;border-radius:24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+    border:1px solid var(--line); box-shadow:0 20px 60px rgba(0,0,0,.55);
+  }
+
+  /* HUD / top bar */
+  .hud{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:10px 12px;border-radius:16px;background:var(--glass);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line);
+  }
+  .logo{font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:14px}
+  .badges{display:flex;gap:8px}
+  .badge{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+    background:rgba(157,213,255,.08);border:1px solid var(--line);font-size:12px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good)}
+
+  /* Hero banner */
+  .hero{
+    margin:12px 0 10px;border-radius:18px;overflow:hidden;position:relative;
+    border:1px solid var(--line)
+  }
+  .hero-bg{
+    height:180px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(157,213,255,.24), transparent 60%),
+      radial-gradient(circle at 85% 60%, rgba(123,86,255,.25), transparent 55%),
+      linear-gradient(145deg,#071022,#0c1430);
+  }
+  .hero-cap{
+    position:absolute;right:10px;bottom:10px;padding:8px 10px;border-radius:12px;
+    font-size:11px;line-height:1.35;color:#f5f8ff;background:rgba(5,8,22,.55);
+    border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)
+  }
+  .label{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.14em;opacity:.9}
+
+  /* Tabs */
+  .tabs{display:flex;gap:8px;overflow:auto;padding:6px 2px}
+  .tab{flex:0 0 auto;border:1px solid var(--line);background:rgba(157,213,255,.06);
+    padding:8px 12px;border-radius:12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+  .tab.active{background:linear-gradient(90deg, rgba(157,213,255,.18), rgba(123,86,255,.18));opacity:1}
+
+  /* Screens */
+  .screen{display:none;margin-top:10px}
+  .screen.active{display:block}
+
+  /* Cards */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
+  h3{margin:4px 0 8px;font-size:15px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase}
+  p{margin:6px 0 8px;font-size:14px;opacity:.95}
+
+  /* Character carousel */
+  .carousel{display:grid;grid-auto-flow:column;grid-auto-columns: 70%; gap:10px;
+    overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px}
+  .char{scroll-snap-align:center;border:1px solid var(--line);border-radius:14px;padding:12px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(157,213,255,.16), transparent 55%),
+      radial-gradient(circle at 90% 60%, rgba(123,86,255,.14), transparent 50%),
+      #0b1224;}
+  .char h4{margin:2px 0 6px;font-size:14px}
+  .stat{height:8px;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:6px 0}
+  .stat>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  small{opacity:.75}
+
+  /* List bullets slim */
+  ul{margin:6px 0 2px 18px;padding:0;font-size:13px}
+  li{margin:4px 0}
+
+  /* Footer links */
+  .links{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;opacity:.85}
+  a{color:var(--accent)}
+  .cta{display:block;text-align:center;margin:10px 0;padding:10px 12px;border-radius:12px;
+    background:linear-gradient(90deg, rgba(157,213,255,.22), rgba(123,86,255,.22));
+    border:1px solid var(--line)}
+
+  /* Back link */
+  .back{display:block;text-align:center;margin:12px 0 0;font-size:12px;opacity:.8}
+</style>
+</head>
+<body>
+<div class="particles"></div>
+
+<div class="wrap">
+  <!-- HUD -->
+  <div class="hud">
+    <div class="logo">THRYLOX</div>
+    <div class="badges">
+      <div class="badge"><span class="dot"></span> Live</div>
+      <div class="badge">UE5</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-cap">
+      <div class="label">Flagship project</div>
+      Cinematic, collectible, tactical. Cross-platform strategy with premium figurines.
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-screen="s-product">Product</button>
+    <button class="tab" data-screen="s-collection">Collection</button>
+    <button class="tab" data-screen="s-distribution">Distribution</button>
+    <button class="tab" data-screen="s-studio">Studio</button>
+    <button class="tab" data-screen="s-company">Company</button>
+    <button class="tab" data-screen="s-contact">Contact</button>
+  </div>
+
+  <!-- SCREENS -->
+  <section id="s-product" class="screen active">
+    <div class="card">
+      <h3>Gameplay snapshot</h3>
+      <p>Session-based tactics with team building. High-fidelity <b>3D figurines</b>, fast rounds, smart counters.</p>
+      <ul>
+        <li>Built on <b>Unreal Engine</b>.</li>
+        <li>Mobile first (iOS/Android), scalable to PC.</li>
+        <li>Live-ops ready, analytics-driven balancing.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Character carousel</h3>
+      <div class="carousel">
+        <div class="char">
+          <div class="label">Techno-Monk</div>
+          <h4>Sleek support • neon seals</h4>
+          <div class="stat"><i style="width:70%"></i></div><small>Control</small>
+        </div>
+        <div class="char">
+          <div class="label">Biomech Guardian</div>
+          <h4>Frontline • halo barrier</h4>
+          <div class="stat"><i style="width:90%"></i></div><small>Defense</small>
+        </div>
+        <div class="char">
+          <div class="label">Holo Trickster</div>
+          <h4>Flanker • mask decoys</h4>
+          <div class="stat"><i style="width:80%"></i></div><small>Mobility</small>
+        </div>
+      </div>
+      <a class="cta" href="#s-contact">Request build / materials</a>
+    </div>
+  </section>
+
+  <section id="s-collection" class="screen">
+    <div class="card">
+      <h3>Collectible system</h3>
+      <ul>
+        <li>Premium figurine quality, readable silhouettes.</li>
+        <li>Cosmetics & expansions — no pay-to-win.</li>
+        <li>Seasonal events, themed sets, mastery tracks.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s-distribution" class="screen">
+    <div class="card">
+      <h3>Distribution & Monetization</h3>
+      <ul>
+        <li>Official storefronts only (Apple, Google, PC partners).</li>
+        <li>F2P with optional cosmetics/collections.</li>
+        <li>Compliance with KYC/AML & sanctions rules.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s-studio" class="screen">
+    <div class="card">
+      <h3>Studio</h3>
+      <p>Experienced product & analytics founders. Remote-first team across EU. Tooling: UE5, GitHub, CI/CD, analytics.</p>
+    </div>
+  </section>
+
+  <section id="s-company" class="screen">
+    <div class="card">
+      <h3>Legal & Compliance</h3>
+      <p>EU entity. Full statutory details on request for banking/platform partners.</p>
+      <ul>
+        <li>No real-money gambling / betting products.</li>
+        <li>Digital-only games & virtual goods.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s-contact" class="screen">
+    <div class="card">
+      <h3>Contact</h3>
+      <p>Email: <a href="mailto:admin@thrylox.com">admin@thrylox.com</a> · <a href="mailto:info@thrylox.com">info@thrylox.com</a></p>
+      <div class="links">
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/">Back to classic site</a>
+      </div>
+    </div>
+  </section>
+
+  <a class="back" href="/">← Back to classic site</a>
+</div>
+
+<script>
+  // Simple tabs
+  const tabs = document.querySelectorAll('.tab');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const id = t.dataset.screen;
+    screens.forEach(s => s.classList.toggle('active', s.id === id));
+    // focus first heading for a11y
+    const h = document.querySelector('#'+id+' h3'); if(h) h.focus?.();
+  }));
+</script>
+</body>
+</html>
