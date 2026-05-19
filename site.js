@@ -10,7 +10,17 @@
   async function postSignup(payload) {
     if (!config.signupEndpoint) {
       saveDraft("thrylox-bog-playtest-signups", payload);
-      return { ok: true, localOnly: true };
+      return {
+        ok: true,
+        localOnly: true,
+        emailSent: false,
+        inviteUrl: config.publicTestFlightLink || "#",
+        message: "Your access link is ready below.",
+        successTitle: "Access ready.",
+        successKicker: "access ready",
+        pointTitle: "Direct access ready",
+        pointCopy: "We saved your request locally for this preview flow, and you can continue into TestFlight right now."
+      };
     }
 
     const response = await fetch(config.signupEndpoint, {
@@ -25,7 +35,21 @@
       throw new Error("Signup request failed");
     }
 
-    return { ok: true, localOnly: false };
+    const result = await response.json().catch(function () {
+      return {};
+    });
+
+    return {
+      ok: true,
+      localOnly: false,
+      emailSent: Boolean(result.emailSent),
+      inviteUrl: result.inviteUrl || config.publicTestFlightLink || "#",
+      message: result.message || "Your access link is ready below.",
+      successTitle: result.successTitle || "Access ready.",
+      successKicker: result.successKicker || "access ready",
+      pointTitle: result.pointTitle || "Direct access ready",
+      pointCopy: result.pointCopy || "Open TestFlight now and step into the current BOG build."
+    };
   }
 
   function setCurrentYear() {
@@ -59,23 +83,15 @@
     }
   }
 
-  async function copyText(value) {
-    if (!value) {
-      return false;
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(value);
-      return true;
-    }
-
-    const input = document.createElement("textarea");
-    input.value = value;
-    document.body.appendChild(input);
-    input.select();
-    const copied = document.execCommand("copy");
-    input.remove();
-    return copied;
+  function readTrafficContext() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      campaign: params.get("campaign") || "",
+      utmSource: params.get("utm_source") || "",
+      utmMedium: params.get("utm_medium") || "",
+      utmCampaign: params.get("utm_campaign") || "",
+      fbclid: params.get("fbclid") || ""
+    };
   }
 
   function initPlaytestForm() {
@@ -147,45 +163,94 @@
     const status = document.getElementById("form-status");
     const success = document.getElementById("playtest-success");
     const openLink = document.getElementById("open-testflight-link");
-    const copyButton = document.getElementById("copy-testflight-link");
     const emailField = document.getElementById("signup-email");
+    const successKicker = document.getElementById("success-kicker");
+    const successTitle = document.getElementById("success-title");
+    const successMessage = document.getElementById("success-message");
+    const successPointTitle = document.getElementById("success-point-title");
+    const successPointCopy = document.getElementById("success-point-copy");
+    const trafficContext = readTrafficContext();
+    const submitButton = document.querySelector('[form="playtest-form"]');
 
     if (openLink) {
       openLink.href = config.publicTestFlightLink || "#";
     }
 
-    if (copyButton) {
-      copyButton.addEventListener("click", async function () {
-        const copied = await copyText(config.publicTestFlightLink || "");
-        copyButton.textContent = copied ? "Link copied" : "Copy failed";
-      });
+    function applySuccessState(result) {
+      const inviteUrl = result.inviteUrl || config.publicTestFlightLink || "#";
+      if (openLink) {
+        openLink.href = inviteUrl;
+        openLink.textContent = result.emailSent ? "Open TestFlight now" : "Continue to TestFlight";
+      }
+      if (successKicker) {
+        successKicker.textContent = result.successKicker || "access ready";
+      }
+      if (successTitle) {
+        successTitle.textContent = result.successTitle || "Access ready.";
+      }
+      if (successMessage) {
+        successMessage.textContent = result.message || "Your access link is ready below.";
+      }
+      if (successPointTitle) {
+        successPointTitle.textContent = result.pointTitle || "Direct access ready";
+      }
+      if (successPointCopy) {
+        successPointCopy.textContent = result.pointCopy || "Open TestFlight now and step into the current BOG build.";
+      }
     }
 
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
       status.textContent = "Preparing access...";
+      if (submitButton) {
+        submitButton.setAttribute("aria-busy", "true");
+      }
 
       const payload = {
         type: "bog_testflight_signup",
         project: config.projectName || "BOG",
         timestamp: new Date().toISOString(),
         source: window.location.href,
-        deliveryMode: config.deliveryMode || "public_link",
+        deliveryMode: config.deliveryMode || "email_plus_public_fallback",
         data: {
-          email: emailField.value.trim()
+          email: emailField.value.trim(),
+          campaign: trafficContext.campaign,
+          utmSource: trafficContext.utmSource,
+          utmMedium: trafficContext.utmMedium,
+          utmCampaign: trafficContext.utmCampaign,
+          fbclid: trafficContext.fbclid
         }
       };
 
       try {
-        await postSignup(payload);
-        status.textContent = "Access prepared.";
+        const result = await postSignup(payload);
+        status.textContent = result.emailSent ? "Invite sent." : "Access prepared.";
+        applySuccessState(result);
         if (success) {
           success.hidden = false;
         }
         setWizardStep(4);
         wizard.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
-        status.textContent = "Could not prepare access right now. Please try again.";
+        applySuccessState({
+          emailSent: false,
+          inviteUrl: config.publicTestFlightLink || "#",
+          message: "We could not send the email right now, but your access link is ready below.",
+          successTitle: "Access ready.",
+          successKicker: "fallback ready",
+          pointTitle: "Fallback invite ready",
+          pointCopy: "Use the direct TestFlight link below and we will keep the signup issue visible on our side."
+        });
+        status.textContent = "Using direct access fallback.";
+        if (success) {
+          success.hidden = false;
+        }
+        setWizardStep(4);
+        wizard.scrollIntoView({ behavior: "smooth", block: "start" });
+      } finally {
+        if (submitButton) {
+          submitButton.removeAttribute("aria-busy");
+        }
       }
     });
 

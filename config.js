@@ -6,6 +6,6 @@ window.THRYLOX_SITE_CONFIG = {
   legalEmail: "admin@thrylox.com",
   companyDomain: "thrylox.com",
   projectName: "BOG",
-  deliveryMode: "public_link",
+  deliveryMode: "email_plus_public_fallback",
   buildStateNote: "This is an early BOG preview. Some systems and presentation layers are still rough, but the core product direction is already testable."
 };
