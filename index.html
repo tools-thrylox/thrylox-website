@@ -1,341 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Thrylox — Game Development Studio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Thrylox is an independent game development studio building high-quality cross-platform games with cinematic visuals and transparent distribution." />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, -sans-serif;
-      background-color: #050816;
-      color: #f5f5f5;
-      line-height: 1.6;
-    }
-    a {
-      color: #9dd5ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 60px;
-    }
-
-    /* TOP NAV */
-    .topbar-wrap {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(14px);
-      background: radial-gradient(circle at top, rgba(157,213,255,0.16), rgba(5,8,22,0.96));
-      border-bottom: 1px solid rgba(157,213,255,0.16);
-    }
-    .topbar {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 20px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-    .logo {
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-    .nav-links {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      opacity: 0.9;
-    }
-    .nav-links a {
-      text-decoration: none;
-      padding-bottom: 2px;
-      border-bottom: 1px solid transparent;
-    }
-    .nav-links a:hover {
-      border-bottom-color: #9dd5ff;
-    }
-
-    /* HERO */
-    .hero {
-      padding: 40px 0 32px;
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(180px, 2fr);
-      gap: 26px;
-      align-items: center;
-    }
-    .hero-kicker {
-      font-size: 11px;
-      text-transform: uppercase;
-      opacity: 0.7;
-      letter-spacing: 0.16em;
-      margin-bottom: 6px;
-    }
-    .hero-title {
-      font-size: 32px;
-      font-weight: 600;
-      margin: 0 0 10px;
-    }
-    .hero-sub {
-      font-size: 15px;
-      opacity: 0.92;
-      margin: 0 0 10px;
-    }
-    .hero-note {
-      font-size: 11px;
-      opacity: 0.7;
-    }
-    .hero-art {
-      height: 150px;
-      border-radius: 18px;
-      border: 1px solid rgba(157,213,255,0.32);
-      background:
-        radial-gradient(circle at top left, rgba(157,213,255,0.22), transparent),
-        radial-gradient(circle at bottom right, rgba(123,86,255,0.18), transparent),
-        linear-gradient(145deg, #040713, #070b1f);
-
-      display: flex;
-      align-items: flex-end;
-      padding: 10px 12px;
-      font-size: 11px;
-      opacity: 0.9;
-    }
-    .hero-art span {
-      display: block;
-      color: #9dd5ff;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 2px;
-    }
-    .pill-link{
-      display:inline-block;
-      margin-top:8px;
-      padding:8px 10px;
-      border:1px solid rgba(157,213,255,.30);
-      border-radius:10px;
-      background:rgba(157,213,255,.08);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-    }
-    .pill-link:hover{ background:rgba(157,213,255,.14); text-decoration:none; }
-
-    /* CONTENT BLOCKS */
-    h2 {
-      font-size: 19px;
-      margin-top: 26px;
-      margin-bottom: 8px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #9dd5ff;
-    }
-    p {
-      margin: 4px 0 10px;
-      font-size: 14px;
-    }
-        .block {
-      background: rgba(8, 20, 40, 0.96);
-      border: 1px solid rgba(104, 158, 255, 0.25);
-      border-radius: 14px;
-      padding: 14px 16px 12px;
-      margin-bottom: 12px;
-      scroll-margin-top: 90px; /* чтобы якорь не прятался под шапкой */
-    }
-    ul {
-      margin: 6px 0 6px 18px;
-      padding: 0;
-      font-size: 13px;
-    }
-    .label {
-      font-size: 10px;
-      text-transform: uppercase;
-      opacity: 0.6;
-      letter-spacing: 0.12em;
-    }
-    .highlight {
-      color: #9dd5ff;
-      font-weight: 500;
-    }
-
-    footer {
-      margin-top: 30px;
-      font-size: 10px;
-      opacity: 0.6;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 720px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      .hero-art {
-        order: -1;
-        height: 130px;
-      }
-      .nav-links {
-        gap: 10px;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thrylox — Game Studio</title>
+  <meta name="description" content="Thrylox is an independent game development studio building system-driven mobile games. Explore the studio and enter the BOG flagship project feed.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23132052'/%3E%3Cellipse cx='32' cy='31' rx='25' ry='10' transform='rotate(-24 32 31)' fill='%2383d4c7'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='24' font-weight='700' fill='%23f7eebd'%3EBOG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./config.js"></script>
+  <script defer src="./site.js"></script>
 </head>
 <body>
-  <div class="topbar-wrap">
-    <div class="topbar">
-      <div class="logo">THRYLOX</div>
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#product">Product</a>
-        <a href="#distribution">Distribution</a>
-        <a href="#studio">Studio</a>
-        <a href="#company">Company</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </div>
+  <main class="page-shell">
+    <section class="top-strip">
+      <p class="micro-label">cache ///// thrylox_company_feed</p>
+      <p class="micro-meta">independent game studio // ue5 // mobile systems // partner overview</p>
+    </section>
 
-  <div class="page">
-    <!-- HERO -->
-    <section class="hero">
-      <div>
-        <div class="hero-kicker">Independent Game Development Studio</div>
-        <h1 class="hero-title">Cinematic, collectible, tactical.</h1>
-        <p class="hero-sub">
-          Thrylox builds high-quality cross-platform games with collectible heroes,
-          strong systems design and transparent monetization for global players and partners.
-        </p>
-        <p class="hero-note">
-          This site provides an overview for platforms, publishers, banks and service providers evaluating Thrylox.
-        </p>
-      </div>
-      <div class="hero-art">
-        <div>
-          <span>Flagship project</span>
-          Stylized tactical arena with collectible figurines, built on Unreal Engine for mobile and beyond.
+    <header class="site-header panel">
+      <div class="brand-mark brand-mark-home">
+        <div class="thrylox-lockup">
+          <p class="eyebrow">thrylox // independent game development studio</p>
+          <h2 class="brand-title">THRYLOX</h2>
+          <p class="brand-note">Mobile-first games with strong systems, clean readability, and product ambition.</p>
         </div>
       </div>
+      <nav class="nav-links">
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#flagship">Flagship project</a>
+        <a class="nav-link" href="#operations">Operations</a>
+        <a class="nav-link" href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero-grid">
+      <article class="hero-copy panel">
+        <div class="hero-stack">
+          <p class="eyebrow">studio feed // systems-first mobile games</p>
+          <h1>We build sharp, readable strategy games with real product shape.</h1>
+          <p class="lead">
+            Thrylox is an independent studio focused on mobile-first games where strong systems,
+            distinctive visual language, and long-term progression matter more than disposable noise.
+          </p>
+          <p>
+            This site is meant for platforms, partners, banks, vendors, and serious players who need
+            to see that the studio is real, active, and building a flagship product with a clear point of view.
+          </p>
+          <div class="hero-signal-row">
+            <span class="signal-chip">unreal engine</span>
+            <span class="signal-chip">mobile first</span>
+            <span class="signal-chip">system design</span>
+            <span class="signal-chip">live roadmap</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="./bog.html">Open BOG project feed</a>
+            <a class="ghost-button" href="#contact">Business contact</a>
+          </div>
+        </div>
+      </article>
+
+      <aside class="hero-side panel">
+        <a id="flagship" class="flagship-project-card" href="./bog.html" aria-label="Open the BOG flagship project page">
+          <p class="section-kicker">flagship project // fully clickable</p>
+          <h2>BOG</h2>
+          <p>
+            A mobile sci-fi strategy game about sanctioned AR figurine duels, exact 12-danger lineup
+            commitment, and a professional Resolver career that grows from local contracts into larger planetary stakes.
+          </p>
+          <div class="hero-signal-row">
+            <span class="signal-chip">resolver fantasy</span>
+            <span class="signal-chip">12 danger</span>
+            <span class="signal-chip">contracts + hub</span>
+            <span class="signal-chip">testflight wave</span>
+          </div>
+          <span class="ghost-button flagship-cta">Open BOG project page</span>
+        </a>
+      </aside>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="block">
-      <div class="label">About</div>
-      <h2>Thrylox Game Studio</h2>
-      <p>
-        Thrylox is an independent game development studio focused on
-        <span class="highlight">high-quality collectible and tactical experiences</span>
-        built with Unreal Engine for mobile and other digital platforms.
-      </p>
-      <p>
-        Our mission is to combine cinematic visuals, accessible gameplay and transparent
-        monetization into long-lasting live games.
-      </p>
+    <section class="cards-grid">
+      <article id="about" class="feature-card">
+        <p class="section-kicker">about // studio posture</p>
+        <h3>Designed to survive contact with real players</h3>
+        <p>We care about product clarity, systems that teach themselves through play, and visual framing that helps a game feel ownable from its first minute.</p>
+      </article>
+
+      <article class="feature-card">
+        <p class="section-kicker">focus // platform</p>
+        <h3>Mobile-first, not mobile-thoughtless</h3>
+        <p>Our games are built for touch devices first, with disciplined UX, readable combat, and scalable product structure rather than console ideas squeezed into a phone.</p>
+      </article>
+
+      <article class="feature-card">
+        <p class="section-kicker">identity // delivery</p>
+        <h3>Stylized but operationally serious</h3>
+        <p>We present with flavor, but we operate with the boring things partners need to trust: official distribution, legal clarity, and transparent business contact.</p>
+      </article>
     </section>
 
-    <!-- PRODUCT -->
-    <section id="product" class="block">
-      <div class="label">Primary product</div>
-      <h2>Flagship Project</h2>
-      <p>
-        Thrylox is developing its first title: a cross-platform, session-based strategy game
-        with collectible heroes and deep team-building mechanics.
-      </p>
-      <ul>
-        <li>Built on <span class="highlight">Unreal Engine</span> with high-fidelity 3D figurines.</li>
-        <li>Designed for <span class="highlight">iOS and Android</span>, with the option to scale to PC and other platforms.</li>
-        <li>Live-ops ready architecture, analytics-driven balancing and content updates.</li>
-      </ul>
+    <section class="section-grid">
+      <article id="operations" class="info-card">
+        <p class="section-kicker">operations // how we work</p>
+        <h2>Studio &amp; production</h2>
+        <ul class="detail-list">
+          <li>Independent development studio building a flagship Unreal Engine project.</li>
+          <li>Remote-first operating model with product, analytics, and game design depth.</li>
+          <li>Focused on durable systems, understandable progression, and reviewable iteration.</li>
+        </ul>
+        <div class="terminal-strip">
+          <span class="terminal-copy">UE5</span>
+          <span class="terminal-copy">mobile strategy</span>
+          <span class="terminal-copy">external playtests</span>
+        </div>
+      </article>
+
+      <article class="info-card">
+        <p class="section-kicker">distribution // business rules</p>
+        <h2>Distribution &amp; compliance</h2>
+        <ul class="detail-list">
+          <li>Digital-only game distribution via official platform channels.</li>
+          <li>No real-money gambling, betting, or high-risk financial product activity.</li>
+          <li>Company and policy information available for vendor, platform, and compliance review.</li>
+        </ul>
+        <div class="terminal-strip">
+          <span class="terminal-copy">app stores</span>
+          <span class="terminal-copy">digital goods</span>
+          <span class="terminal-copy">partner review ready</span>
+        </div>
+      </article>
     </section>
 
-    <!-- DISTRIBUTION -->
-    <section id="distribution" class="block">
-      <div class="label">Distribution model</div>
-      <h2>Distribution & Monetization</h2>
-      <ul>
-        <li>Digital-only distribution via official storefronts (Apple App Store, Google Play, PC platforms and partner stores).</li>
-        <li>Free-to-play with optional in-app purchases (cosmetics, collections, expansions).</li>
-        <li>No gray channels or third-party key resellers.</li>
-        <li>Compliance with platform policies and applicable KYC/AML & sanctions regulations.</li>
-      </ul>
+    <section class="policy-grid">
+      <article class="policy-card">
+        <p class="section-kicker">documents // legal pages</p>
+        <h2>Core policies</h2>
+        <p>We keep the public-facing legal layer simple and direct. The site can expose deeper statutory details when needed for banks, publishers, and service providers.</p>
+        <div class="button-row">
+          <a class="ghost-button" href="./privacy.html">Privacy notice</a>
+          <a class="ghost-button" href="./terms.html">Terms of use</a>
+        </div>
+      </article>
+
+      <article id="contact" class="contact-card">
+        <p class="section-kicker">contact // business channel</p>
+        <h2>Reach Thrylox</h2>
+        <p>For business, platform, compliance, publishing, or vendor questions, use the official studio channels below.</p>
+        <div class="contact-line">
+          <a data-support-email href="mailto:info@thrylox.com">info@thrylox.com</a>
+          <a data-legal-email href="mailto:admin@thrylox.com">admin@thrylox.com</a>
+          <span class="inline-link" data-company-domain>thrylox.com</span>
+        </div>
+      </article>
     </section>
 
-    <!-- STUDIO -->
-    <section id="studio" class="block">
-      <div class="label">Operations</div>
-      <h2>Studio & Operations</h2>
-      <ul>
-        <li>Founders: experienced product, analytics and game industry specialists.</li>
-        <li>Remote-first team with contractors and partners across the EU and other regions.</li>
-        <li>Using industry-standard tools: Unreal Engine, GitHub, CI/CD, analytics stack.</li>
-      </ul>
-    </section>
-
-    <!-- COMPANY DETAILS -->
-    <section id="company" class="block">
-      <div class="label">Company details</div>
-      <h2>Legal & Compliance</h2>
-      <p>
-        Thrylox is operated by an independent game development company registered in the European Union.
-        Full statutory details (legal entity name, registration number, registered address and tax ID)
-        are available to banking, platform and compliance partners upon request.
-      </p>
-      <p>Business focus:</p>
-      <ul>
-        <li>Development and publishing of digital-only video games and related virtual goods.</li>
-        <li>No involvement in real-money gambling, betting or high-risk financial products.</li>
-        <li>Operations structured to comply with applicable platform rules, KYC/AML and sanctions regulations.</li>
-      </ul>
-      <p class="label">
-        This website is an informational overview for partners, banks and service providers.
-      </p>
-    </section>
-
-    <!-- POLICIES -->
-    <section class="block">
-      <div class="label">Policies</div>
-      <h2>Key Documents</h2>
-      <p>
-        <a href="/privacy.html">Privacy Notice</a> &nbsp;|&nbsp;
-        <a href="/terms.html">Terms of Use</a>
-      </p>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="block">
-      <div class="label">Contact</div>
-      <h2>Contact & Business Inquiries</h2>
-      <p>For banking, compliance and partnership questions, please contact:</p>
-      <p>
-        Email: <a href="mailto:admin@thrylox.com">admin@thrylox.com</a> &nbsp;|&nbsp;
-        <a href="mailto:info@thrylox.com">info@thrylox.com</a>
-      </p>
-      <p>Official domain: <span class="highlight">thrylox.com</span></p>
-    </section>
-
-    <footer>
-      <div>© <span id="year"></span> Thrylox. All rights reserved.</div>
-      <div>Thrylox is an independent game development studio. No real-money gambling.</div>
+    <footer class="page-footer panel">
+      <p class="footer-note">© <span data-current-year></span> Thrylox. All rights reserved.</p>
+      <p class="footer-note">Independent game development studio. No real-money gambling or betting products.</p>
     </footer>
-  </div>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+  </main>
 </body>
 </html>
