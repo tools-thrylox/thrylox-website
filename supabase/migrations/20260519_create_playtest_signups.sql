@@ -9,6 +9,7 @@ create table if not exists public.playtest_signups (
   utm_source text,
   utm_medium text,
   utm_campaign text,
+  utm_content text,
   fbclid text,
   delivery_mode text not null default 'email_plus_public_fallback',
   latest_invite_url text,

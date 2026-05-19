@@ -90,6 +90,7 @@
       utmSource: params.get("utm_source") || "",
       utmMedium: params.get("utm_medium") || "",
       utmCampaign: params.get("utm_campaign") || "",
+      utmContent: params.get("utm_content") || "",
       fbclid: params.get("fbclid") || ""
     };
   }
@@ -218,6 +219,7 @@
           utmSource: trafficContext.utmSource,
           utmMedium: trafficContext.utmMedium,
           utmCampaign: trafficContext.utmCampaign,
+          utmContent: trafficContext.utmContent,
           fbclid: trafficContext.fbclid
         }
       };

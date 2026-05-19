@@ -1,8 +1,8 @@
 window.THRYLOX_SITE_CONFIG = {
   siteName: "Thrylox",
   publicTestFlightLink: "https://testflight.apple.com/join/g2C5saQ4",
-  signupEndpoint: "",
-  supportEmail: "info@thrylox.com",
+  signupEndpoint: "https://hvmucdlsmqclxcuqsatg.supabase.co/functions/v1/testflight-signup",
+  supportEmail: "raigred@thrylox.com",
   legalEmail: "admin@thrylox.com",
   companyDomain: "thrylox.com",
   projectName: "BOG",

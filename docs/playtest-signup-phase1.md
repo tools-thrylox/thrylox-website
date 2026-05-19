@@ -43,9 +43,10 @@ That is acceptable for now because our own database becomes the source of truth 
 ## Required environment variables
 
 - `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_SECRET_KEY`
 - `RESEND_API_KEY`
 - `RESEND_FROM_EMAIL`
+- `RESEND_FROM_NAME`
 - `RESEND_REPLY_TO`
 - `PUBLIC_TESTFLIGHT_LINK`
 - `SUPPORT_EMAIL`
@@ -57,6 +58,7 @@ The migration in `supabase/migrations/20260519_create_playtest_signups.sql` crea
 
 - email and project identity
 - source/campaign fields
+- `utm_content` support for conference QR variants and banner placements
 - signup counters
 - latest invite URL
 - delivery status and provider response
@@ -68,7 +70,7 @@ The migration in `supabase/migrations/20260519_create_playtest_signups.sql` crea
 
 - Create a new project in Supabase
 - Save the project URL
-- Save the service role key
+- Save the server-side secret key
 
 ### 2. Create table
 
@@ -86,6 +88,17 @@ The migration in `supabase/migrations/20260519_create_playtest_signups.sql` crea
 - Create a new edge function named `testflight-signup`
 - Paste the code from `supabase/functions/testflight-signup/index.ts`
 - Add the environment variables above
+- Disable JWT verification for this function so the website can invoke it as a public signup endpoint
+
+### 4a. Recommended values for this project
+
+- `SUPABASE_URL=https://hvmucdlsmqclxcuqsatg.supabase.co`
+- `PUBLIC_TESTFLIGHT_LINK=https://testflight.apple.com/join/g2C5saQ4`
+- `ALLOWED_ORIGIN=https://thrylox.com`
+- `SUPPORT_EMAIL=raigred@thrylox.com`
+- `RESEND_FROM_EMAIL=raigred@thrylox.com`
+- `RESEND_FROM_NAME=Maks @ Thrylox`
+- `RESEND_REPLY_TO=raigred@thrylox.com`
 
 ### 5. Wire the site
 

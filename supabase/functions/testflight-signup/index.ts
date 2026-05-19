@@ -4,9 +4,14 @@ const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") ?? "https://thrylox.com";
 const publicInviteUrl =
   Deno.env.get("PUBLIC_TESTFLIGHT_LINK") ??
   "https://testflight.apple.com/join/g2C5saQ4";
-const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "info@thrylox.com";
-const resendFromEmail =
-  Deno.env.get("RESEND_FROM_EMAIL") ?? "playtest@thrylox.com";
+const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "raigred@thrylox.com";
+const resendFromAddress =
+  Deno.env.get("RESEND_FROM_EMAIL") ?? "raigred@thrylox.com";
+const resendFromName =
+  Deno.env.get("RESEND_FROM_NAME") ?? "Maks @ Thrylox";
+const resendFromEmail = resendFromAddress.includes("<")
+  ? resendFromAddress
+  : `${resendFromName} <${resendFromAddress}>`;
 const resendReplyTo =
   Deno.env.get("RESEND_REPLY_TO") ?? supportEmail;
 
@@ -34,7 +39,10 @@ function buildEmailHtml(email: string) {
         <p style="margin:0 0 12px;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#19b8b5;">BOG playtest access</p>
         <h1 style="margin:0 0 16px;font-size:30px;line-height:1;color:#132052;">Your build is ready.</h1>
         <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#32457c;">
-          Thanks for joining the first external BOG wave, ${escapedEmail}. Your access path is open now.
+          Hi ${escapedEmail},
+        </p>
+        <p style="margin:0 0 28px;font-size:16px;line-height:1.6;color:#32457c;">
+          Thanks for joining the first external BOG wave. I'm Maks, one of the cofounders at Thrylox, and I really appreciate you taking the time to help us shape BOG early.
         </p>
         <p style="margin:0 0 28px;font-size:16px;line-height:1.6;color:#32457c;">
           Open TestFlight with the button below and install the current build whenever you're ready.
@@ -49,7 +57,7 @@ function buildEmailHtml(email: string) {
           <a href="${publicInviteUrl}" style="color:#132052;">${publicInviteUrl}</a>
         </p>
         <p style="margin:0;font-size:13px;line-height:1.6;color:#32457c;">
-          Need help? Reply to this message or contact <a href="mailto:${supportEmail}" style="color:#132052;">${supportEmail}</a>.
+          Need help? Reply to this message or contact <a href="mailto:${supportEmail}" style="color:#132052;">${supportEmail}</a>.<br><br>Maks<br>Co-founder, Thrylox
         </p>
       </div>
     </div>
@@ -58,11 +66,19 @@ function buildEmailHtml(email: string) {
 
 function buildEmailText() {
   return [
+    "Hi,",
+    "",
+    "Thanks for joining the first external BOG wave.",
+    "I'm Maks, one of the cofounders at Thrylox, and I really appreciate you helping us shape BOG early.",
+    "",
     "Your BOG playtest access is ready.",
     "",
     `Open TestFlight: ${publicInviteUrl}`,
     "",
-    `If you run into access issues, contact ${supportEmail}.`
+    `If you run into access issues, contact ${supportEmail}.`,
+    "",
+    "Maks",
+    "Co-founder, Thrylox"
   ].join("\n");
 }
 
@@ -154,9 +170,11 @@ Deno.serve(async (request) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const supabaseSecretKey =
+      Deno.env.get("SUPABASE_SECRET_KEY") ??
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    if (!supabaseUrl || !serviceRoleKey) {
+    if (!supabaseUrl || !supabaseSecretKey) {
       return jsonResponse({ ok: false, error: "Supabase server configuration is incomplete" }, 500);
     }
 
@@ -168,6 +186,7 @@ Deno.serve(async (request) => {
     const utmSource = String(body?.data?.utmSource || "").trim();
     const utmMedium = String(body?.data?.utmMedium || "").trim();
     const utmCampaign = String(body?.data?.utmCampaign || "").trim();
+    const utmContent = String(body?.data?.utmContent || "").trim();
     const fbclid = String(body?.data?.fbclid || "").trim();
     const deliveryMode = String(body?.deliveryMode || "email_plus_public_fallback").trim();
 
@@ -176,7 +195,7 @@ Deno.serve(async (request) => {
     }
 
     const now = new Date().toISOString();
-    const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    const supabase = createClient(supabaseUrl, supabaseSecretKey, {
       auth: { persistSession: false }
     });
 
@@ -197,6 +216,7 @@ Deno.serve(async (request) => {
       utm_source: utmSource,
       utm_medium: utmMedium,
       utm_campaign: utmCampaign,
+      utm_content: utmContent,
       fbclid,
       delivery_mode: deliveryMode,
       latest_invite_url: publicInviteUrl,
