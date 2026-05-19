@@ -88,6 +88,7 @@
     const screens = Array.from(wizard.querySelectorAll(".onboarding-screen"));
     const dots = Array.from(document.querySelectorAll(".progress-dot"));
     const skipButtons = Array.from(document.querySelectorAll("[data-skip-to-form]"));
+    const prevButtons = Array.from(document.querySelectorAll("[data-prev-step]"));
     const formStepIndex = screens.findIndex(function (screen) {
       return screen.classList.contains("onboarding-form-screen");
     });
@@ -107,6 +108,11 @@
         dot.classList.toggle("is-active", index <= progressValue);
       });
 
+      prevButtons.forEach(function (button) {
+        const shouldShow = stepIndex > 0 && stepIndex < screens.length - 1;
+        button.hidden = !shouldShow;
+      });
+
       skipButtons.forEach(function (button) {
         const shouldHide = stepIndex >= formStepIndex;
         button.hidden = shouldHide;
@@ -119,7 +125,7 @@
       });
     });
 
-    wizard.querySelectorAll("[data-prev-step]").forEach(function (button) {
+    prevButtons.forEach(function (button) {
       button.addEventListener("click", function () {
         setWizardStep(stepIndex - 1);
       });
