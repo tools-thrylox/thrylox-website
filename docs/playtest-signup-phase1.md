@@ -1,0 +1,114 @@
+# Phase 1 Public-Link Signup Flow
+
+## Goal
+
+Ship a reliable production signup flow now, without waiting for App Store Connect API approval:
+
+1. capture the tester email on `thrylox.com`
+2. save the signup in our own database
+3. send our own email containing the public TestFlight link
+4. show the same TestFlight link on-screen immediately
+5. fall back gracefully if email delivery fails
+
+## Player-facing flow
+
+1. Player opens `thrylox.com/onboarding.html`
+2. Player enters email
+3. Frontend posts to `signupEndpoint`
+4. Backend saves the signup in Supabase
+5. Backend attempts transactional delivery through Resend
+6. Frontend always opens the success state:
+   - if email sent: `Check your email` + `Open TestFlight now`
+   - if email failed: `Access ready` + `Continue to TestFlight`
+
+## Why this phase exists
+
+This phase does **not** solve Apple-side named tester attribution. Anyone who ultimately accepts the public TestFlight link may still appear as `Anonymous` in App Store Connect.
+
+That is acceptable for now because our own database becomes the source of truth for:
+
+- email
+- first seen timestamp
+- source URL
+- campaign context
+- delivery result
+
+## Services
+
+- **Frontend**: GitHub Pages site on `thrylox.com`
+- **Database**: Supabase Postgres
+- **Backend endpoint**: Supabase Edge Function
+- **Email delivery**: Resend
+
+## Required environment variables
+
+- `SUPABASE_URL`
+- `SUPABASE_SECRET_KEY`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
+- `RESEND_FROM_NAME`
+- `RESEND_REPLY_TO`
+- `PUBLIC_TESTFLIGHT_LINK`
+- `SUPPORT_EMAIL`
+- `ALLOWED_ORIGIN`
+
+## Database table
+
+The migration in `supabase/migrations/20260519_create_playtest_signups.sql` creates a `playtest_signups` table with:
+
+- email and project identity
+- source/campaign fields
+- `utm_content` support for conference QR variants and banner placements
+- signup counters
+- latest invite URL
+- delivery status and provider response
+- raw payload archive
+
+## Deployment steps
+
+### 1. Create Supabase project
+
+- Create a new project in Supabase
+- Save the project URL
+- Save the server-side secret key
+
+### 2. Create table
+
+- Open the SQL editor in Supabase
+- Run `supabase/migrations/20260519_create_playtest_signups.sql`
+
+### 3. Create Resend account
+
+- Verify the sending domain, ideally `thrylox.com`
+- Create a sender address such as `playtest@thrylox.com`
+- Create an API key
+
+### 4. Deploy edge function
+
+- Create a new edge function named `testflight-signup`
+- Paste the code from `supabase/functions/testflight-signup/index.ts`
+- Add the environment variables above
+- Disable JWT verification for this function so the website can invoke it as a public signup endpoint
+
+### 4a. Recommended values for this project
+
+- `SUPABASE_URL=https://hvmucdlsmqclxcuqsatg.supabase.co`
+- `PUBLIC_TESTFLIGHT_LINK=https://testflight.apple.com/join/g2C5saQ4`
+- `ALLOWED_ORIGIN=https://thrylox.com`
+- `SUPPORT_EMAIL=raigred@thrylox.com`
+- `RESEND_FROM_EMAIL=raigred@thrylox.com`
+- `RESEND_FROM_NAME=Maks @ Thrylox`
+- `RESEND_REPLY_TO=raigred@thrylox.com`
+
+### 5. Wire the site
+
+- Set `signupEndpoint` in `config.js` to the edge function URL
+- Keep `publicTestFlightLink` as the fallback and immediate success CTA
+
+## Notes
+
+- This phase intentionally prefers resilient UX over perfect attribution.
+- Once App Store Connect API access is approved, the backend can evolve to:
+  - create named beta testers
+  - trigger Apple-side invites
+  - still keep the public link as fallback
