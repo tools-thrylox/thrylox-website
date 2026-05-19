@@ -7,6 +7,40 @@
     window.localStorage.setItem(key, JSON.stringify(items));
   }
 
+  function getDeviceId() {
+    const storageKey = "thrylox-playtest-device-id";
+    const existing = window.localStorage.getItem(storageKey);
+    if (existing) {
+      return existing;
+    }
+
+    const nextId =
+      window.crypto && typeof window.crypto.randomUUID === "function"
+        ? window.crypto.randomUUID()
+        : "device-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+    window.localStorage.setItem(storageKey, nextId);
+    return nextId;
+  }
+
+  function readDeviceAccess() {
+    try {
+      return JSON.parse(window.localStorage.getItem("thrylox-playtest-access") || "null");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function rememberDeviceAccess(inviteUrl) {
+    window.localStorage.setItem(
+      "thrylox-playtest-access",
+      JSON.stringify({
+        inviteUrl: inviteUrl || config.publicTestFlightLink || "#",
+        savedAt: new Date().toISOString()
+      })
+    );
+  }
+
   async function postSignup(payload) {
     if (!config.signupEndpoint) {
       saveDraft("thrylox-bog-playtest-signups", payload);
@@ -172,6 +206,7 @@
     const successPointCopy = document.getElementById("success-point-copy");
     const trafficContext = readTrafficContext();
     const submitButton = document.querySelector('[form="playtest-form"]');
+    const deviceId = getDeviceId();
 
     if (openLink) {
       openLink.href = config.publicTestFlightLink || "#";
@@ -220,13 +255,35 @@
           utmMedium: trafficContext.utmMedium,
           utmCampaign: trafficContext.utmCampaign,
           utmContent: trafficContext.utmContent,
-          fbclid: trafficContext.fbclid
+          fbclid: trafficContext.fbclid,
+          deviceId: deviceId
         }
       };
 
       try {
+        const savedDeviceAccess = readDeviceAccess();
+        if (savedDeviceAccess && savedDeviceAccess.inviteUrl) {
+          applySuccessState({
+            emailSent: false,
+            inviteUrl: savedDeviceAccess.inviteUrl,
+            message: "This device already requested access earlier. You can continue right now below.",
+            successTitle: "Access already unlocked.",
+            successKicker: "device already registered",
+            pointTitle: "Device already recognized",
+            pointCopy: "To protect inboxes and keep our email limit healthy, we do not send a new invite from the same device every time."
+          });
+          status.textContent = "Using existing device access.";
+          if (success) {
+            success.hidden = false;
+          }
+          setWizardStep(4);
+          wizard.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
         const result = await postSignup(payload);
         status.textContent = result.emailSent ? "Invite sent." : "Access prepared.";
+        rememberDeviceAccess(result.inviteUrl);
         applySuccessState(result);
         if (success) {
           success.hidden = false;

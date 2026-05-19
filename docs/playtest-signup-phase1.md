@@ -108,6 +108,9 @@ The migration in `supabase/migrations/20260519_create_playtest_signups.sql` crea
 ## Notes
 
 - This phase intentionally prefers resilient UX over perfect attribution.
+- Repeat submits from the same email update the existing row instead of creating duplicate testers.
+- The same browser/device re-uses the existing TestFlight path in the frontend instead of sending another email again.
+- Incognito or cleared browser storage can bypass device memory, so the guaranteed server-side protection in Phase 1 is still email-based dedupe.
 - Once App Store Connect API access is approved, the backend can evolve to:
   - create named beta testers
   - trigger Apple-side invites

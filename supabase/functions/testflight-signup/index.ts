@@ -128,7 +128,33 @@ async function sendWithResend(email: string) {
   };
 }
 
-function successPayload(emailSent: boolean, deliveryError: string | null) {
+function successPayload(
+  emailSent: boolean,
+  deliveryError: string | null,
+  alreadyRegistered = false
+) {
+  if (alreadyRegistered) {
+    return {
+      ok: true,
+      emailSent,
+      inviteUrl: publicInviteUrl,
+      successKicker: emailSent
+        ? "invite already sent"
+        : "email already registered",
+      successTitle:
+        emailSent
+          ? "Check your email."
+          : "Access ready.",
+      message:
+        emailSent
+          ? "We already sent your TestFlight link earlier. You can also continue right now below."
+          : "This email is already registered. You can continue right now below.",
+      pointTitle: "Email already registered",
+      pointCopy:
+        "To protect inboxes and keep our email limit healthy, we do not re-send the same invite every time."
+    };
+  }
+
   if (emailSent) {
     return {
       ok: true,
@@ -201,7 +227,7 @@ Deno.serve(async (request) => {
 
     const existingResult = await supabase
       .from("playtest_signups")
-      .select("id, signup_count")
+      .select("id, signup_count, email_sent")
       .eq("project", project)
       .eq("email", email)
       .maybeSingle();
@@ -237,18 +263,19 @@ Deno.serve(async (request) => {
       if (updateResult.error) {
         return jsonResponse({ ok: false, error: updateResult.error.message }, 500);
       }
-    } else {
-      const insertResult = await supabase.from("playtest_signups").insert({
-        project,
-        email,
-        ...sharedRecord
-      });
 
-      if (insertResult.error) {
-        return jsonResponse({ ok: false, error: insertResult.error.message }, 500);
-      }
+      return jsonResponse(successPayload(Boolean(existingResult.data?.email_sent), null, true));
     }
 
+    const insertResult = await supabase.from("playtest_signups").insert({
+      project,
+      email,
+      ...sharedRecord
+    });
+
+    if (insertResult.error) {
+      return jsonResponse({ ok: false, error: insertResult.error.message }, 500);
+    }
     const delivery = await sendWithResend(email);
 
     const finalUpdate = await supabase
