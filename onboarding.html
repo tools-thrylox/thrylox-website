@@ -8,159 +8,123 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23132052'/%3E%3Cellipse cx='32' cy='31' rx='25' ry='10' transform='rotate(-24 32 31)' fill='%2383d4c7'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='24' font-weight='700' fill='%23f7eebd'%3EBOG%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500;700&family=JetBrains+Mono:wght@200;400;700&family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700;800&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
   <script src="./config.js"></script>
   <script defer src="./site.js"></script>
 </head>
-<body class="onboarding-page">
+<body class="onboarding-page figma-onboarding">
   <main class="onboarding-page-shell">
-    <section class="onboarding-app panel">
-      <header class="onboarding-header">
-        <button class="onboarding-back-arrow" type="button" data-prev-step aria-label="Go back" hidden>
-          <span aria-hidden="true">←</span>
-        </button>
-        <a class="brand-mark onboarding-brand-link" href="./bog.html" target="_blank" rel="noopener">
-          <div class="brand-lockup" aria-hidden="true">
-            <div class="brand-orbit"></div>
-            <div class="brand-word">BOG</div>
-          </div>
-          <div class="brand-meta">
-            <p class="eyebrow">current external wave</p>
-            <h2 class="brand-title">Playtest onboarding</h2>
-          </div>
-        </a>
-      </header>
-
-      <div class="onboarding-progress" aria-hidden="true">
-        <span class="progress-dot is-active"></span>
-        <span class="progress-dot"></span>
-        <span class="progress-dot"></span>
-        <span class="progress-dot"></span>
-      </div>
-
+    <section class="onboarding-app" aria-label="BOG playtest onboarding">
       <div id="playtest-onboarding" class="onboarding-shell onboarding-shell-standalone">
-        <article class="onboarding-screen onboarding-screen-standalone is-active" data-step="0" data-progress="0">
-          <div class="onboarding-body onboarding-body-compact">
-            <p class="section-kicker">step 01 // become the resolver</p>
-            <h1 class="onboarding-title">Travel on your ship. Solve cases. Build your name.</h1>
-            <p class="section-copy">
-              BOG drops you into a sci-fi career where conflicts are settled through sanctioned AR duels.
-            </p>
-            <div class="onboarding-points onboarding-points-tight">
-              <div class="onboarding-point">
-                <strong>Resolver fantasy</strong>
-                <span>You are trusted to take the contract and deliver the answer.</span>
-              </div>
-              <div class="onboarding-point">
-                <strong>Career momentum</strong>
-                <span>Each mission points toward bigger cases, better figures, and higher ranks.</span>
-              </div>
-            </div>
-          </div>
-          <div class="onboarding-footer onboarding-footer-fixed">
-            <button class="button keyboard-cta" type="button" data-next-step>Continue</button>
+        <article class="onboarding-screen figma-screen figma-screen-welcome is-active" data-step="0" data-progress="0">
+          <img class="figma-bg" src="./assets/onboarding/screen1-bg.png" alt="">
+          <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
+          <p class="figma-intro-text">Your contract is ready:<br>/// Prove your worth in sanctioned AR-duels.</p>
+          <p class="figma-welcome-text">Welcome to BOG</p>
+          <img class="figma-bog-logo" src="./assets/onboarding/bog-logo.png" alt="BOG">
+          <img class="figma-tagline-a" src="./assets/onboarding/screen1-line-a.png" alt="The future demands solutions.">
+          <img class="figma-tagline-b" src="./assets/onboarding/screen1-line-b.png" alt="We hire the best">
+          <div class="figma-start-wrap">
+            <img class="figma-start-frame" src="./assets/onboarding/start-frame.png" alt="">
+            <button class="figma-start-button" type="button" data-next-step data-haptic="start" aria-label="Start onboarding">
+              <img src="./assets/onboarding/start-button.png" alt="">
+            </button>
           </div>
         </article>
 
-        <article class="onboarding-screen onboarding-screen-standalone" data-step="1" data-progress="1" hidden>
-          <div class="onboarding-body onboarding-body-compact">
-            <p class="section-kicker">step 02 // honest pvp</p>
-            <h1 class="onboarding-title">Draft, counter, and commit the exact 12-danger answer.</h1>
-            <p class="section-copy">
-              This is card-game-style PvP built on reads, lineup mastery, and real counterplay.
-            </p>
-            <div class="onboarding-points onboarding-points-tight">
-              <div class="onboarding-point">
-                <strong>Fair fights</strong>
-                <span>Winning comes from decisions, not frantic tapping.</span>
-              </div>
-              <div class="onboarding-point">
-                <strong>Collection matters</strong>
-                <span>Each figure expands the answers you can bring into the duel.</span>
-              </div>
-            </div>
+        <article class="onboarding-screen figma-screen" data-step="1" data-progress="1" hidden>
+          <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
+          <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
+          <p class="figma-step">/// Step 01 / 03</p>
+          <h1 class="figma-title figma-title-ship">YOUR SHIP.<br>YOUR CONTRACTS.<br>YOUR NAME</h1>
+          <p class="figma-lead">Welcome to a world where disputes<br>are resolved through sanctioned<br>AR-duels.</p>
+          <img class="figma-plus figma-plus-one" src="./assets/onboarding/screen2-plus.png" alt="">
+          <img class="figma-plus figma-plus-two" src="./assets/onboarding/screen2-plus.png" alt="">
+          <div class="figma-check figma-check-one" aria-hidden="true">
+            <img class="figma-check-box" src="./assets/onboarding/check-box.png" alt="">
+            <img class="figma-check-mark" src="./assets/onboarding/check-mark.png" alt="">
           </div>
-          <div class="onboarding-footer onboarding-footer-fixed onboarding-footer-split">
-            <button class="button keyboard-cta" type="button" data-next-step>Continue</button>
+          <p class="figma-body figma-body-one">Build your reputation<br>from the ground up.</p>
+          <div class="figma-check figma-check-two" aria-hidden="true">
+            <img class="figma-check-box" src="./assets/onboarding/check-box.png" alt="">
+            <img class="figma-check-mark" src="./assets/onboarding/check-mark.png" alt="">
           </div>
+          <p class="figma-body figma-body-two">Collect unique figures, solve complex<br>cases, and rise through the ranks<br>of elite corporate duelists.</p>
+          <button class="figma-continue-button" type="button" data-next-step aria-label="Continue">
+            <img src="./assets/onboarding/continue-button.png" alt="">
+          </button>
         </article>
 
-        <article class="onboarding-screen onboarding-screen-standalone" data-step="2" data-progress="2" hidden>
-          <div class="onboarding-body onboarding-body-compact">
-            <p class="section-kicker">step 03 // roguelike pve</p>
-            <h1 class="onboarding-title">Push deeper, build an engine, and close anomalies before the run breaks.</h1>
-            <p class="section-copy">
-              Beyond PvP, BOG opens into escalating PvE runs where good choices snowball into something dangerous.
-            </p>
-            <div class="onboarding-points onboarding-points-tight">
-              <div class="onboarding-point">
-                <strong>Engine-building</strong>
-                <span>Shape the run step by step until the whole build starts to hum.</span>
-              </div>
-              <div class="onboarding-point">
-                <strong>Compact first build</strong>
-                <span>This slice is small, but it already shows the role, the loop, and the appetite for more.</span>
-              </div>
-            </div>
-          </div>
-          <div class="onboarding-footer onboarding-footer-fixed onboarding-footer-split">
-            <button class="button keyboard-cta" type="button" data-next-step>Continue</button>
-          </div>
+        <article class="onboarding-screen figma-screen" data-step="2" data-progress="2" hidden>
+          <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
+          <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
+          <p class="figma-step">/// Step 02 / 03</p>
+          <h1 class="figma-title figma-title-system">MASTER<br>THE SYSTEM</h1>
+          <img class="figma-icon figma-tactical-icon" src="./assets/onboarding/screen3-icon.png" alt="">
+          <p class="figma-body figma-subtitle figma-tactical-title">Tactical Duels:</p>
+          <p class="figma-body figma-tactical-copy">Outsmart rivals in card-style combat built<br>on drafting, counters, and master-level<br>lineup strategies.</p>
+          <img class="figma-icon figma-anomaly-icon" src="./assets/onboarding/screen3-icon.png" alt="">
+          <p class="figma-body figma-subtitle figma-anomaly-title">Brave Anomalies:</p>
+          <p class="figma-body figma-anomaly-copy">Dive into high-stakes rogue-like runs<br>where the right tactical choices<br>trigger devastating snowball effects.</p>
+          <img class="figma-card figma-card-left" src="./assets/onboarding/screen3-card-left.png" alt="">
+          <img class="figma-card figma-card-right" src="./assets/onboarding/screen3-card-right.png" alt="">
+          <img class="figma-vs" src="./assets/onboarding/screen3-vs.png" alt="VS">
+          <button class="figma-continue-button" type="button" data-next-step aria-label="Continue">
+            <img src="./assets/onboarding/continue-button.png" alt="">
+          </button>
         </article>
 
-        <article class="onboarding-screen onboarding-screen-standalone onboarding-form-screen" data-step="3" data-progress="3" hidden>
-          <div class="onboarding-body onboarding-body-compact">
-            <p class="section-kicker">step 04 // play the build</p>
-            <h1 class="onboarding-title">Join the first wave and help shape BOG early.</h1>
-            <p class="section-copy">
-              We take early testers seriously, and we plan to recognize first-wave players in the full release.
+        <article class="onboarding-screen figma-screen onboarding-form-screen" data-step="3" data-progress="3" hidden>
+          <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
+          <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
+          <p class="figma-step figma-step-long">/// Step 03 / 03 _ play the build</p>
+          <h1 class="figma-title figma-title-bog">STEP<br>INTO THE BOG</h1>
+          <p class="figma-lead figma-reward-copy">Early testers get priority<br>clearance and exclusive rewards<br>at full release.</p>
+          <img class="figma-icon figma-feedback-icon" src="./assets/onboarding/screen4-icon.png" alt="">
+          <p class="figma-body figma-subtitle figma-feedback-title">Your feedback matters.</p>
+          <p class="figma-body figma-feedback-copy">Help us balance the duels, catch the bugs,<br>and polish the game before launch.</p>
+          <img class="figma-icon figma-skip-icon" src="./assets/onboarding/screen4-icon.png" alt="">
+          <p class="figma-body figma-subtitle figma-skip-title">Skip the wait.</p>
+          <p class="figma-body figma-skip-copy">Enter your email and grab the download link<br>instantly on the next screen.</p>
+          <form id="playtest-form" class="figma-email-form">
+            <img class="figma-email-panel" src="./assets/onboarding/email-panel.png" alt="">
+            <img class="figma-email-input-bg" src="./assets/onboarding/email-input-bg.png" alt="">
+            <label class="visually-hidden" for="signup-email">Email</label>
+            <input class="figma-email-input" id="signup-email" name="email" type="email" placeholder="you@example.com" required>
+            <p class="figma-legal-note">
+              By requesting access, you agree that<br>
+              Thrylox may use your email to manage<br>
+              playtest access and follow-up according<br>
+              to the <a href="./privacy.html" target="_blank" rel="noopener">Privacy Notice</a> and <a href="./terms.html" target="_blank" rel="noopener">Terms of Use</a>.
             </p>
-            <div class="onboarding-points onboarding-points-tight">
-              <div class="onboarding-point">
-                <strong>Your feedback matters</strong>
-                <span>You help us see what already feels sharp and what still needs work.</span>
-              </div>
-              <div class="onboarding-point">
-                <strong>No inbox detour</strong>
-                <span>The invite appears on-screen immediately after signup.</span>
-              </div>
+            <p id="form-status" class="figma-status-text" aria-live="polite"></p>
+            <button form="playtest-form" class="figma-submit-button" type="submit" aria-label="Get TestFlight invite">
+              <img src="./assets/onboarding/submit-button.png" alt="">
+            </button>
+            <div id="signup-success-panel" class="figma-signup-success" hidden>
+              <p class="figma-thank-title">Thank you!</p>
+              <p id="inline-success-message" class="figma-thank-copy">Your access link is ready.</p>
+              <a id="inline-testflight-link" class="figma-download-link" data-testflight-link href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener">
+                <span>Open TestFlight build</span>
+              </a>
+              <p class="figma-thank-note">If TestFlight opens slowly, keep this page and tap the link again.</p>
             </div>
-            <form id="playtest-form" class="stack-form">
-              <label for="signup-email">Email</label>
-              <input class="form-input" id="signup-email" name="email" type="email" placeholder="you@example.com" required>
-              <p class="form-legal-note">
-                By requesting access, you agree that Thrylox may use your email to manage playtest access and follow-up according to the
-                <a class="inline-link" href="./privacy.html" target="_blank" rel="noopener">Privacy Notice</a>
-                and
-                <a class="inline-link" href="./terms.html" target="_blank" rel="noopener">Terms of Use</a>.
-              </p>
-              <p id="form-status" class="status-text" aria-live="polite"></p>
-            </form>
-          </div>
-          <div class="onboarding-footer onboarding-footer-fixed onboarding-footer-split">
-            <button form="playtest-form" class="button keyboard-cta" type="submit">Get TestFlight invite</button>
-          </div>
+          </form>
         </article>
 
-        <article id="playtest-success" class="onboarding-screen onboarding-screen-standalone onboarding-success-screen" data-step="4" data-progress="3" hidden>
-          <div class="onboarding-body onboarding-body-compact">
-            <p id="success-kicker" class="section-kicker">access ready</p>
-            <h1 id="success-title" class="onboarding-title">You're in.</h1>
-            <p id="success-message" class="section-copy">
-              Your access link is ready below.
-            </p>
-            <div class="onboarding-points onboarding-points-tight">
-              <div class="onboarding-point onboarding-point-success">
-                <strong id="success-point-title">First-wave access</strong>
-                <span id="success-point-copy">Thank you for helping shape the game while it is still taking form.</span>
-              </div>
-            </div>
-            <p class="footnote">Access issues: <a data-support-email href="mailto:info@thrylox.com">info@thrylox.com</a></p>
-          </div>
-          <div class="onboarding-footer onboarding-footer-fixed">
-            <a id="open-testflight-link" class="button keyboard-cta" data-testflight-link href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener">Open TestFlight now</a>
-          </div>
+        <article id="playtest-success" class="onboarding-screen figma-screen onboarding-success-screen" data-step="4" data-progress="3" hidden>
+          <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
+          <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
+          <p id="success-kicker" class="figma-step">access ready</p>
+          <h1 id="success-title" class="figma-title figma-title-bog">ACCESS<br>READY</h1>
+          <p id="success-message" class="figma-lead figma-success-message">Your access link is ready below.</p>
+          <p id="success-point-title" class="figma-body figma-subtitle figma-success-title">First-wave access</p>
+          <p id="success-point-copy" class="figma-body figma-success-copy">Thank you for helping shape the game while it is still taking form.</p>
+          <a id="open-testflight-link" class="figma-continue-button figma-link-button" data-testflight-link href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener" aria-label="Open TestFlight now">
+            <img src="./assets/onboarding/continue-button.png" alt="">
+          </a>
+          <p class="figma-support">Access issues: <a data-support-email href="mailto:info@thrylox.com">info@thrylox.com</a></p>
         </article>
       </div>
     </section>

@@ -42,7 +42,12 @@
   }
 
   async function postSignup(payload) {
-    if (!config.signupEndpoint) {
+    const isLocalPreview =
+      window.location.protocol === "file:" ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
+
+    if (!config.signupEndpoint || isLocalPreview) {
       saveDraft("thrylox-bog-playtest-signups", payload);
       return {
         ok: true,
@@ -129,6 +134,51 @@
     };
   }
 
+  function updateOnboardingScale() {
+    const app = document.querySelector(".figma-onboarding .onboarding-app");
+    if (!app) {
+      return;
+    }
+
+    const scale = Math.min(window.innerWidth / 393, window.innerHeight / 852, 1);
+    app.style.setProperty("--onboarding-scale", String(scale));
+    app.style.width = 393 * scale + "px";
+    app.style.height = 852 * scale + "px";
+  }
+
+  function triggerHapticFeedback(kind) {
+    if (!window.navigator || typeof window.navigator.vibrate !== "function") {
+      return;
+    }
+
+    const pattern = kind === "start" ? [18, 24, 28] : 16;
+    window.navigator.vibrate(pattern);
+  }
+
+  function initHapticFeedback() {
+    document.querySelectorAll("[data-haptic]").forEach(function (button) {
+      button.addEventListener("pointerdown", function () {
+        button.classList.add("is-pressing");
+        button.classList.remove("is-released");
+        triggerHapticFeedback(button.dataset.haptic || "");
+      });
+
+      ["pointerup", "pointercancel", "pointerleave"].forEach(function (eventName) {
+        button.addEventListener(eventName, function () {
+          if (!button.classList.contains("is-pressing")) {
+            return;
+          }
+
+          button.classList.remove("is-pressing");
+          button.classList.add("is-released");
+          window.setTimeout(function () {
+            button.classList.remove("is-released");
+          }, 240);
+        });
+      });
+    });
+  }
+
   function initPlaytestForm() {
     const form = document.getElementById("playtest-form");
     const wizard = document.getElementById("playtest-onboarding");
@@ -196,7 +246,6 @@
     }
 
     const status = document.getElementById("form-status");
-    const success = document.getElementById("playtest-success");
     const openLink = document.getElementById("open-testflight-link");
     const emailField = document.getElementById("signup-email");
     const successKicker = document.getElementById("success-kicker");
@@ -204,6 +253,9 @@
     const successMessage = document.getElementById("success-message");
     const successPointTitle = document.getElementById("success-point-title");
     const successPointCopy = document.getElementById("success-point-copy");
+    const inlineSuccess = document.getElementById("signup-success-panel");
+    const inlineSuccessMessage = document.getElementById("inline-success-message");
+    const inlineTestFlightLink = document.getElementById("inline-testflight-link");
     const trafficContext = readTrafficContext();
     const submitButton = document.querySelector('[form="playtest-form"]');
     const deviceId = getDeviceId();
@@ -217,6 +269,19 @@
       if (openLink) {
         openLink.href = inviteUrl;
         openLink.textContent = result.emailSent ? "Open TestFlight now" : "Continue to TestFlight";
+      }
+      if (inlineTestFlightLink) {
+        inlineTestFlightLink.href = inviteUrl;
+      }
+      if (inlineSuccessMessage) {
+        inlineSuccessMessage.textContent = result.message || "Your access link is ready. Open TestFlight below to download the current build.";
+      }
+      if (inlineSuccess) {
+        inlineSuccess.hidden = false;
+      }
+      form.classList.add("is-success");
+      if (emailField) {
+        emailField.disabled = true;
       }
       if (successKicker) {
         successKicker.textContent = result.successKicker || "access ready";
@@ -272,23 +337,17 @@
             pointTitle: "Device already recognized",
             pointCopy: "To protect inboxes and keep our email limit healthy, we do not send a new invite from the same device every time."
           });
-          status.textContent = "Using existing device access.";
-          if (success) {
-            success.hidden = false;
-          }
-          setWizardStep(4);
+          status.textContent = "Existing access found.";
+          setWizardStep(formStepIndex);
           wizard.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
         }
 
         const result = await postSignup(payload);
-        status.textContent = result.emailSent ? "Invite sent." : "Access prepared.";
+        status.textContent = result.emailSent ? "Invite sent. TestFlight link is ready." : "TestFlight link is ready.";
         rememberDeviceAccess(result.inviteUrl);
         applySuccessState(result);
-        if (success) {
-          success.hidden = false;
-        }
-        setWizardStep(4);
+        setWizardStep(formStepIndex);
         wizard.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         applySuccessState({
@@ -300,11 +359,8 @@
           pointTitle: "Fallback invite ready",
           pointCopy: "Use the direct TestFlight link below and we will keep the signup issue visible on our side."
         });
-        status.textContent = "Using direct access fallback.";
-        if (success) {
-          success.hidden = false;
-        }
-        setWizardStep(4);
+        status.textContent = "Direct TestFlight link is ready.";
+        setWizardStep(formStepIndex);
         wizard.scrollIntoView({ behavior: "smooth", block: "start" });
       } finally {
         if (submitButton) {
@@ -313,12 +369,26 @@
       }
     });
 
+    const submittedEmail = new URLSearchParams(window.location.search).get("email");
+    if (submittedEmail && emailField) {
+      emailField.value = submittedEmail;
+      setWizardStep(formStepIndex >= 0 ? formStepIndex : 0);
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete("email");
+      window.history.replaceState({}, "", cleanUrl);
+      return;
+    }
+
     setWizardStep(0);
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     setCurrentYear();
     setProjectLinkTargets();
+    updateOnboardingScale();
+    initHapticFeedback();
     initPlaytestForm();
   });
+
+  window.addEventListener("resize", updateOnboardingScale);
 })();
