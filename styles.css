@@ -1082,6 +1082,10 @@ h3 {
 
 .figma-screen img {
   display: block;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .figma-bg,
@@ -1204,6 +1208,16 @@ h3 {
   appearance: none;
   cursor: pointer;
   line-height: 0;
+  transform-origin: 50% 54%;
+  transition:
+    filter 110ms ease,
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  user-select: none;
+  will-change: transform, filter;
 }
 
 .figma-start-button {
@@ -1211,21 +1225,28 @@ h3 {
   top: 27.333px;
   width: 113.333px;
   height: 113.333px;
-  transform-origin: 50% 54%;
-  transition:
-    filter 110ms ease,
-    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform, filter;
 }
 
 .figma-start-button:active,
-.figma-start-button.is-pressing {
-  transform: translateY(3px) scale(0.94);
+.figma-continue-button:active,
+.figma-submit-button:active,
+.figma-link-button:active,
+.figma-download-link:active,
+.figma-start-button.is-pressing,
+.figma-continue-button.is-pressing,
+.figma-submit-button.is-pressing,
+.figma-link-button.is-pressing,
+.figma-download-link.is-pressing {
+  transform: translateY(3px) scale(0.965);
   filter: brightness(1.08) saturate(1.08);
 }
 
-.figma-start-button.is-released {
-  animation: figma-start-release 220ms cubic-bezier(0.18, 0.88, 0.28, 1.2);
+.figma-start-button.is-released,
+.figma-continue-button.is-released,
+.figma-submit-button.is-released,
+.figma-link-button.is-released,
+.figma-download-link.is-released {
+  animation: figma-button-release 180ms cubic-bezier(0.18, 0.88, 0.28, 1.08);
 }
 
 .figma-start-button img,
@@ -1234,16 +1255,21 @@ h3 {
 .figma-link-button img {
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-@keyframes figma-start-release {
+@keyframes figma-button-release {
   0% {
-    transform: translateY(3px) scale(0.94);
+    transform: translateY(3px) scale(0.965);
     filter: brightness(1.08) saturate(1.08);
   }
 
-  58% {
-    transform: translateY(-1px) scale(1.025);
+  62% {
+    transform: translateY(0) scale(1.01);
     filter: brightness(1.02) saturate(1.04);
   }
 
@@ -1600,6 +1626,16 @@ h3 {
   color: transparent;
   text-decoration: none;
   overflow: hidden;
+  transform-origin: 50% 54%;
+  transition:
+    filter 110ms ease,
+    transform 110ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  user-select: none;
+  will-change: transform, filter;
 }
 
 .figma-download-link::before {

@@ -162,11 +162,21 @@
   }
 
   function initHapticFeedback() {
-    document.querySelectorAll("[data-haptic]").forEach(function (button) {
+    const pressableSelector = [
+      ".figma-start-button",
+      ".figma-continue-button",
+      ".figma-submit-button",
+      ".figma-download-link",
+      ".figma-link-button"
+    ].join(",");
+
+    document.querySelectorAll(pressableSelector).forEach(function (button) {
       button.addEventListener("pointerdown", function () {
         button.classList.add("is-pressing");
         button.classList.remove("is-released");
-        triggerHapticFeedback(button.dataset.haptic || "");
+        if (button.dataset.haptic) {
+          triggerHapticFeedback(button.dataset.haptic || "");
+        }
       });
 
       ["pointerup", "pointercancel", "pointerleave"].forEach(function (eventName) {
