@@ -140,7 +140,13 @@
       return;
     }
 
-    const scale = Math.min(window.innerWidth / 393, window.innerHeight / 852, 1);
+    const viewportWidth = window.visualViewport && window.visualViewport.width ? window.visualViewport.width : window.innerWidth;
+    const viewportHeight = window.visualViewport && window.visualViewport.height ? window.visualViewport.height : window.innerHeight;
+    if (!viewportWidth || !viewportHeight) {
+      return;
+    }
+
+    const scale = Math.min(viewportWidth / 393, viewportHeight / 852, 1);
     app.style.setProperty("--onboarding-scale", String(scale));
     app.style.width = 393 * scale + "px";
     app.style.height = 852 * scale + "px";
