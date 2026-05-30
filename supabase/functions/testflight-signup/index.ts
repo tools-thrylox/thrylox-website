@@ -4,6 +4,9 @@ const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") ?? "https://thrylox.com";
 const publicInviteUrl =
   Deno.env.get("PUBLIC_TESTFLIGHT_LINK") ??
   "https://testflight.apple.com/join/g2C5saQ4";
+const discordInviteUrl =
+  Deno.env.get("DISCORD_INVITE_URL") ??
+  "https://discord.gg/sCsABzfj";
 const supportEmail = Deno.env.get("SUPPORT_EMAIL") ?? "raigred@thrylox.com";
 const resendFromAddress =
   Deno.env.get("RESEND_FROM_EMAIL") ?? "raigred@thrylox.com";
@@ -18,7 +21,7 @@ const resendReplyTo =
 const corsHeaders = {
   "Access-Control-Allow-Origin": allowedOrigin,
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Content-Type": "application/json"
 };
 
@@ -36,6 +39,19 @@ function jsonResponse(payload: unknown, status = 200) {
 
 function cleanText(value: unknown, maxLength = 500) {
   return String(value ?? "").trim().slice(0, maxLength);
+}
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    };
+    return entities[character] || character;
+  });
 }
 
 function nullableText(value: unknown, maxLength = 500) {
@@ -68,6 +84,30 @@ function pagePathFromSource(sourceUrl: string | null) {
   } catch (_error) {
     return null;
   }
+}
+
+function createInviteToken() {
+  const firstPart = crypto.randomUUID().replaceAll("-", "");
+  const secondPart = crypto.randomUUID().replaceAll("-", "").slice(0, 16);
+  return `${firstPart}${secondPart}`;
+}
+
+function buildDiscordTrackingUrl(request: Request, token: string) {
+  const url = new URL(request.url);
+  url.search = "";
+  url.searchParams.set("action", "discord");
+  url.searchParams.set("token", token);
+  return url.toString();
+}
+
+function redirectResponse(url: string) {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: url,
+      "Cache-Control": "no-store"
+    }
+  });
 }
 
 async function recordFunnelEvent(
@@ -140,8 +180,135 @@ async function handleFunnelEvent(
   return jsonResponse({ ok: true });
 }
 
-function buildEmailHtml(email: string) {
-  const escapedEmail = email.replace(/[<>&"]/g, "");
+async function prepareDiscordInvite(
+  supabase: SupabaseWriter,
+  body: any,
+  request: Request,
+  email: string,
+  signupId: string | null
+) {
+  const data = body?.data ?? {};
+  const project = cleanText(body?.project || "BOG", 120) || "BOG";
+  const now = new Date().toISOString();
+
+  try {
+    const existingResult = await supabase
+      .from("playtest_discord_invites")
+      .select("invite_token")
+      .eq("project", project)
+      .eq("email", email)
+      .maybeSingle();
+
+    if (existingResult.error) {
+      console.error("Discord invite lookup failed:", existingResult.error.message);
+      return discordInviteUrl;
+    }
+
+    if (existingResult.data?.invite_token) {
+      const updateResult = await supabase
+        .from("playtest_discord_invites")
+        .update({
+          signup_id: signupId,
+          discord_invite_url: discordInviteUrl,
+          source_url: nullableText(body?.source, 2000),
+          campaign: nullableText(data?.campaign, 240),
+          utm_source: nullableText(data?.utmSource, 240),
+          utm_medium: nullableText(data?.utmMedium, 240),
+          utm_campaign: nullableText(data?.utmCampaign, 240),
+          utm_content: nullableText(data?.utmContent, 240),
+          fbclid: nullableText(data?.fbclid, 500),
+          last_sent_at: now,
+          updated_at: now,
+          raw_payload: body
+        })
+        .eq("project", project)
+        .eq("email", email);
+
+      if (updateResult.error) {
+        console.error("Discord invite update failed:", updateResult.error.message);
+      }
+
+      return buildDiscordTrackingUrl(request, existingResult.data.invite_token);
+    }
+
+    const inviteToken = createInviteToken();
+    const insertResult = await supabase.from("playtest_discord_invites").insert({
+      project,
+      email,
+      signup_id: signupId,
+      invite_token: inviteToken,
+      discord_invite_url: discordInviteUrl,
+      source_url: nullableText(body?.source, 2000),
+      campaign: nullableText(data?.campaign, 240),
+      utm_source: nullableText(data?.utmSource, 240),
+      utm_medium: nullableText(data?.utmMedium, 240),
+      utm_campaign: nullableText(data?.utmCampaign, 240),
+      utm_content: nullableText(data?.utmContent, 240),
+      fbclid: nullableText(data?.fbclid, 500),
+      first_sent_at: now,
+      last_sent_at: now,
+      raw_payload: body
+    });
+
+    if (insertResult.error) {
+      console.error("Discord invite insert failed:", insertResult.error.message);
+      return discordInviteUrl;
+    }
+
+    return buildDiscordTrackingUrl(request, inviteToken);
+  } catch (error) {
+    console.error("Discord invite preparation failed:", error);
+    return discordInviteUrl;
+  }
+}
+
+async function handleDiscordRedirect(
+  supabase: SupabaseWriter,
+  request: Request
+) {
+  const url = new URL(request.url);
+  const token = cleanText(url.searchParams.get("token"), 160);
+  if (!token) {
+    return redirectResponse(discordInviteUrl);
+  }
+
+  const inviteResult = await supabase
+    .from("playtest_discord_invites")
+    .select("id, click_count, first_clicked_at, discord_invite_url")
+    .eq("invite_token", token)
+    .maybeSingle();
+
+  if (inviteResult.error) {
+    console.error("Discord invite redirect lookup failed:", inviteResult.error.message);
+    return redirectResponse(discordInviteUrl);
+  }
+
+  if (!inviteResult.data?.id) {
+    return redirectResponse(discordInviteUrl);
+  }
+
+  const now = new Date().toISOString();
+  const clickCount = Number(inviteResult.data.click_count || 0) + 1;
+  const updateResult = await supabase
+    .from("playtest_discord_invites")
+    .update({
+      click_count: clickCount,
+      first_clicked_at: inviteResult.data.first_clicked_at || now,
+      last_clicked_at: now,
+      updated_at: now
+    })
+    .eq("id", inviteResult.data.id);
+
+  if (updateResult.error) {
+    console.error("Discord invite click update failed:", updateResult.error.message);
+  }
+
+  return redirectResponse(inviteResult.data.discord_invite_url || discordInviteUrl);
+}
+
+function buildEmailHtml(email: string, discordUrl: string) {
+  const escapedEmail = escapeHtml(email);
+  const escapedDiscordUrl = escapeHtml(discordUrl);
   return `
     <div style="font-family:Arial,sans-serif;background:#fcf6d9;color:#132052;padding:32px 20px;">
       <div style="max-width:560px;margin:0 auto;background:#fff9e7;border:1px solid rgba(19,32,82,0.12);padding:32px 24px;">
@@ -165,6 +332,17 @@ function buildEmailHtml(email: string) {
         <p style="margin:0 0 24px;font-size:14px;line-height:1.6;word-break:break-all;">
           <a href="${publicInviteUrl}" style="color:#132052;">${publicInviteUrl}</a>
         </p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#32457c;">
+          Join the BOG Discord channel too. We'll use it for build notes, bug reports, balance questions, and quick calls with early testers.
+        </p>
+        <p style="margin:0 0 28px;">
+          <a href="${escapedDiscordUrl}" style="display:inline-block;padding:14px 20px;background:#5865f2;color:#ffffff;text-decoration:none;font-weight:700;border-radius:10px;">
+            Join BOG Discord
+          </a>
+        </p>
+        <p style="margin:0 0 24px;font-size:14px;line-height:1.6;color:#32457c;word-break:break-all;">
+          Discord invite: <a href="${escapedDiscordUrl}" style="color:#132052;">${escapedDiscordUrl}</a>
+        </p>
         <p style="margin:0;font-size:13px;line-height:1.6;color:#32457c;">
           Need help? Reply to this message or contact <a href="mailto:${supportEmail}" style="color:#132052;">${supportEmail}</a>.<br><br>Maks<br>Co-founder, Thrylox
         </p>
@@ -173,7 +351,7 @@ function buildEmailHtml(email: string) {
   `;
 }
 
-function buildEmailText() {
+function buildEmailText(discordUrl: string) {
   return [
     "Hi,",
     "",
@@ -184,6 +362,9 @@ function buildEmailText() {
     "",
     `Open TestFlight: ${publicInviteUrl}`,
     "",
+    "Join the BOG Discord channel for build notes, bug reports, balance questions, and quick calls with early testers.",
+    `Join Discord: ${discordUrl}`,
+    "",
     `If you run into access issues, contact ${supportEmail}.`,
     "",
     "Maks",
@@ -191,7 +372,7 @@ function buildEmailText() {
   ].join("\n");
 }
 
-async function sendWithResend(email: string) {
+async function sendWithResend(email: string, discordUrl: string) {
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   if (!resendApiKey) {
     return {
@@ -212,8 +393,8 @@ async function sendWithResend(email: string) {
       to: [email],
       reply_to: resendReplyTo,
       subject: "Your BOG playtest access",
-      html: buildEmailHtml(email),
-      text: buildEmailText()
+      html: buildEmailHtml(email, discordUrl),
+      text: buildEmailText(discordUrl)
     })
   });
 
@@ -299,7 +480,7 @@ Deno.serve(async (request) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  if (request.method !== "POST") {
+  if (request.method !== "POST" && request.method !== "GET") {
     return jsonResponse({ ok: false, error: "Method not allowed" }, 405);
   }
 
@@ -311,6 +492,19 @@ Deno.serve(async (request) => {
 
     if (!supabaseUrl || !supabaseSecretKey) {
       return jsonResponse({ ok: false, error: "Supabase server configuration is incomplete" }, 500);
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseSecretKey, {
+      auth: { persistSession: false }
+    });
+
+    if (request.method === "GET") {
+      const requestUrl = new URL(request.url);
+      if (requestUrl.searchParams.get("action") === "discord") {
+        return await handleDiscordRedirect(supabase, request);
+      }
+
+      return jsonResponse({ ok: false, error: "Method not allowed" }, 405);
     }
 
     const body = await request.json();
@@ -325,10 +519,6 @@ Deno.serve(async (request) => {
     const utmContent = String(body?.data?.utmContent || "").trim();
     const fbclid = String(body?.data?.fbclid || "").trim();
     const deliveryMode = String(body?.deliveryMode || "email_plus_public_fallback").trim();
-
-    const supabase = createClient(supabaseUrl, supabaseSecretKey, {
-      auth: { persistSession: false }
-    });
 
     if (requestType === "bog_onboarding_event") {
       return await handleFunnelEvent(supabase, body, request);
@@ -386,11 +576,15 @@ Deno.serve(async (request) => {
       return jsonResponse(successPayload(Boolean(existingResult.data?.email_sent), null, true));
     }
 
-    const insertResult = await supabase.from("playtest_signups").insert({
-      project,
-      email,
-      ...sharedRecord
-    });
+    const insertResult = await supabase
+      .from("playtest_signups")
+      .insert({
+        project,
+        email,
+        ...sharedRecord
+      })
+      .select("id")
+      .single();
 
     if (insertResult.error) {
       return jsonResponse({ ok: false, error: insertResult.error.message }, 500);
@@ -400,7 +594,24 @@ Deno.serve(async (request) => {
       eventResult: "created"
     });
 
-    const delivery = await sendWithResend(email);
+    const discordAccessUrl = await prepareDiscordInvite(
+      supabase,
+      body,
+      request,
+      email,
+      insertResult.data?.id || null
+    );
+
+    const delivery = await sendWithResend(email, discordAccessUrl);
+
+    await supabase
+      .from("playtest_discord_invites")
+      .update({
+        email_provider_message_id: delivery.providerMessageId,
+        updated_at: new Date().toISOString()
+      })
+      .eq("project", project)
+      .eq("email", email);
 
     await recordFunnelEvent(
       supabase,

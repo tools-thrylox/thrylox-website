@@ -75,6 +75,13 @@ The migration in `supabase/migrations/20260530_create_playtest_funnel_events.sql
 - `email_sent` or `email_delivery_failed`
 - `testflight_link_clicked`
 
+The migration in `supabase/migrations/20260530203000_create_playtest_discord_invites.sql` creates `playtest_discord_invites` for Discord attribution. The email uses a server-side tokenized redirect instead of putting the tester email in the URL:
+
+- email is stored against `invite_token`
+- the email CTA opens the Edge Function with `action=discord&token=...`
+- the Edge Function increments `click_count`, stores `first_clicked_at` / `last_clicked_at`, and redirects to Discord
+- `joined_at` is reserved for a future Discord bot or OAuth flow; a plain Discord invite can only prove a click, not a completed join
+
 Useful funnel check:
 
 ```sql
