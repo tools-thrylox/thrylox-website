@@ -9,15 +9,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500;700&family=JetBrains+Mono:wght@200;400;700&family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700;800&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260526-onboarding-fix">
+  <link rel="stylesheet" href="./styles.css?v=20260530-funnel-events">
   <script src="./config.js"></script>
-  <script defer src="./site.js?v=20260526-onboarding-fix"></script>
+  <script defer src="./site.js?v=20260530-funnel-events"></script>
 </head>
 <body class="onboarding-page figma-onboarding">
   <main class="onboarding-page-shell">
     <section class="onboarding-app" aria-label="BOG playtest onboarding">
       <div id="playtest-onboarding" class="onboarding-shell onboarding-shell-standalone">
-        <article class="onboarding-screen figma-screen figma-screen-welcome is-active" data-step="0" data-progress="0">
+        <article class="onboarding-screen figma-screen figma-screen-welcome is-active" data-step="0" data-progress="0" data-funnel-step="welcome" data-funnel-event="onboarding_screen_1_viewed">
           <img class="figma-bg" src="./assets/onboarding/screen1-bg.png" alt="">
           <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
           <p class="figma-intro-text">Your contract is ready:<br>/// Prove your worth in sanctioned AR-duels.</p>
@@ -33,7 +33,7 @@
           </div>
         </article>
 
-        <article class="onboarding-screen figma-screen" data-step="1" data-progress="1" hidden>
+        <article class="onboarding-screen figma-screen" data-step="1" data-progress="1" data-funnel-step="terms_intro" data-funnel-event="onboarding_screen_2_viewed" hidden>
           <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
           <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
           <p class="figma-step">/// Step 01 / 03</p>
@@ -56,7 +56,7 @@
           </button>
         </article>
 
-        <article class="onboarding-screen figma-screen" data-step="2" data-progress="2" hidden>
+        <article class="onboarding-screen figma-screen" data-step="2" data-progress="2" data-funnel-step="game_intro" data-funnel-event="onboarding_screen_3_viewed" hidden>
           <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
           <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
           <p class="figma-step">/// Step 02 / 03</p>
@@ -75,7 +75,7 @@
           </button>
         </article>
 
-        <article class="onboarding-screen figma-screen onboarding-form-screen" data-step="3" data-progress="3" hidden>
+        <article class="onboarding-screen figma-screen onboarding-form-screen" data-step="3" data-progress="3" data-funnel-step="email_form" data-funnel-event="onboarding_email_screen_viewed" hidden>
           <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
           <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
           <p class="figma-step figma-step-long">/// Step 03 / 03 _ play the build</p>
@@ -113,7 +113,7 @@
           </form>
         </article>
 
-        <article id="playtest-success" class="onboarding-screen figma-screen onboarding-success-screen" data-step="4" data-progress="3" hidden>
+        <article id="playtest-success" class="onboarding-screen figma-screen onboarding-success-screen" data-step="4" data-progress="3" data-funnel-step="success" data-funnel-event="onboarding_success_screen_viewed" hidden>
           <img class="figma-bg" src="./assets/onboarding/screen-bg.png" alt="">
           <img class="figma-top-cutline" src="./assets/onboarding/top-cutline.png" alt="">
           <p id="success-kicker" class="figma-step">access ready</p>

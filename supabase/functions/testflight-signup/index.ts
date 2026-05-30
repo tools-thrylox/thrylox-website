@@ -23,12 +23,121 @@ const corsHeaders = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+type SupabaseWriter = {
+  from: (table: string) => any;
+};
 
 function jsonResponse(payload: unknown, status = 200) {
   return new Response(JSON.stringify(payload), {
     status,
     headers: corsHeaders
   });
+}
+
+function cleanText(value: unknown, maxLength = 500) {
+  return String(value ?? "").trim().slice(0, maxLength);
+}
+
+function nullableText(value: unknown, maxLength = 500) {
+  const cleaned = cleanText(value, maxLength);
+  return cleaned || null;
+}
+
+function nullableEmail(value: unknown) {
+  const email = cleanText(value, 320).toLowerCase();
+  return email && emailPattern.test(email) ? email : null;
+}
+
+function nullableInteger(value: unknown) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : null;
+}
+
+function safeTimestamp(value: unknown) {
+  const parsed = new Date(String(value ?? ""));
+  return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+}
+
+function pagePathFromSource(sourceUrl: string | null) {
+  if (!sourceUrl) {
+    return null;
+  }
+
+  try {
+    return new URL(sourceUrl).pathname;
+  } catch (_error) {
+    return null;
+  }
+}
+
+async function recordFunnelEvent(
+  supabase: SupabaseWriter,
+  body: any,
+  request: Request,
+  eventNameOverride?: string,
+  extraEventData: Record<string, unknown> = {}
+) {
+  const data = body?.data ?? {};
+  const sourceUrl = nullableText(body?.source, 2000);
+  const eventName = cleanText(eventNameOverride || data?.eventName || body?.eventName, 96);
+
+  if (!eventName) {
+    return { ok: false, error: "Missing funnel event name", status: 400 };
+  }
+
+  const eventData = {
+    type: nullableText(body?.type, 120),
+    deliveryMode: nullableText(body?.deliveryMode, 120),
+    eventResult: nullableText(data?.eventResult, 120),
+    buttonId: nullableText(data?.buttonId, 120),
+    linkUrl: nullableText(data?.linkUrl, 2000),
+    localTimestamp: nullableText(body?.timestamp, 80),
+    ...extraEventData
+  };
+
+  const insertResult = await supabase.from("playtest_funnel_events").insert({
+    project: cleanText(body?.project || "BOG", 120) || "BOG",
+    event_name: eventName,
+    event_timestamp: safeTimestamp(body?.timestamp),
+    session_id: nullableText(data?.sessionId, 160),
+    device_id: nullableText(data?.deviceId, 160),
+    email: nullableEmail(data?.email),
+    source_url: sourceUrl,
+    page_path: pagePathFromSource(sourceUrl),
+    referrer: nullableText(data?.referrer, 2000),
+    campaign: nullableText(data?.campaign, 240),
+    utm_source: nullableText(data?.utmSource, 240),
+    utm_medium: nullableText(data?.utmMedium, 240),
+    utm_campaign: nullableText(data?.utmCampaign, 240),
+    utm_content: nullableText(data?.utmContent, 240),
+    fbclid: nullableText(data?.fbclid, 500),
+    step_index: nullableInteger(data?.stepIndex),
+    step_number: nullableInteger(data?.stepNumber),
+    step_label: nullableText(data?.stepLabel, 120),
+    event_data: eventData,
+    raw_payload: body,
+    user_agent: nullableText(request.headers.get("user-agent"), 500)
+  });
+
+  if (insertResult.error) {
+    console.error("Funnel event insert failed:", insertResult.error.message);
+    return { ok: false, error: insertResult.error.message, status: 500 };
+  }
+
+  return { ok: true };
+}
+
+async function handleFunnelEvent(
+  supabase: SupabaseWriter,
+  body: any,
+  request: Request
+) {
+  const result = await recordFunnelEvent(supabase, body, request);
+  if (!result.ok) {
+    return jsonResponse({ ok: false, error: result.error }, result.status || 500);
+  }
+
+  return jsonResponse({ ok: true });
 }
 
 function buildEmailHtml(email: string) {
@@ -205,6 +314,7 @@ Deno.serve(async (request) => {
     }
 
     const body = await request.json();
+    const requestType = String(body?.type || "").trim();
     const project = String(body?.project || "BOG").trim() || "BOG";
     const sourceUrl = String(body?.source || "").trim();
     const email = String(body?.data?.email || "").trim().toLowerCase();
@@ -216,14 +326,19 @@ Deno.serve(async (request) => {
     const fbclid = String(body?.data?.fbclid || "").trim();
     const deliveryMode = String(body?.deliveryMode || "email_plus_public_fallback").trim();
 
+    const supabase = createClient(supabaseUrl, supabaseSecretKey, {
+      auth: { persistSession: false }
+    });
+
+    if (requestType === "bog_onboarding_event") {
+      return await handleFunnelEvent(supabase, body, request);
+    }
+
     if (!email || !emailPattern.test(email)) {
       return jsonResponse({ ok: false, error: "A valid email is required" }, 400);
     }
 
     const now = new Date().toISOString();
-    const supabase = createClient(supabaseUrl, supabaseSecretKey, {
-      auth: { persistSession: false }
-    });
 
     const existingResult = await supabase
       .from("playtest_signups")
@@ -264,6 +379,10 @@ Deno.serve(async (request) => {
         return jsonResponse({ ok: false, error: updateResult.error.message }, 500);
       }
 
+      await recordFunnelEvent(supabase, body, request, "email_submitted", {
+        eventResult: "already_registered"
+      });
+
       return jsonResponse(successPayload(Boolean(existingResult.data?.email_sent), null, true));
     }
 
@@ -276,7 +395,25 @@ Deno.serve(async (request) => {
     if (insertResult.error) {
       return jsonResponse({ ok: false, error: insertResult.error.message }, 500);
     }
+
+    await recordFunnelEvent(supabase, body, request, "email_submitted", {
+      eventResult: "created"
+    });
+
     const delivery = await sendWithResend(email);
+
+    await recordFunnelEvent(
+      supabase,
+      body,
+      request,
+      delivery.emailSent ? "email_sent" : "email_delivery_failed",
+      {
+        eventResult: delivery.emailSent ? "sent" : "failed",
+        emailProvider: "resend",
+        providerMessageId: delivery.providerMessageId,
+        deliveryError: delivery.deliveryError
+      }
+    );
 
     const finalUpdate = await supabase
       .from("playtest_signups")

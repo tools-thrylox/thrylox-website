@@ -32,6 +32,7 @@ That is acceptable for now because our own database becomes the source of truth 
 - source URL
 - campaign context
 - delivery result
+- onboarding funnel events
 
 ## Services
 
@@ -63,6 +64,33 @@ The migration in `supabase/migrations/20260519_create_playtest_signups.sql` crea
 - latest invite URL
 - delivery status and provider response
 - raw payload archive
+
+The migration in `supabase/migrations/20260530_create_playtest_funnel_events.sql` creates a separate `playtest_funnel_events` event log. This keeps `playtest_signups` clean and deduped while preserving the full funnel:
+
+- `onboarding_screen_1_viewed`
+- `onboarding_screen_2_viewed`
+- `onboarding_screen_3_viewed`
+- `onboarding_email_screen_viewed`
+- `email_submitted`
+- `email_sent` or `email_delivery_failed`
+- `testflight_link_clicked`
+
+Useful funnel check:
+
+```sql
+select
+  event_name,
+  utm_source,
+  utm_campaign,
+  utm_content,
+  count(*) as events,
+  count(distinct session_id) as sessions,
+  count(distinct device_id) as devices
+from public.playtest_funnel_events
+where project = 'BOG'
+group by event_name, utm_source, utm_campaign, utm_content
+order by min(event_timestamp);
+```
 
 ## Deployment steps
 

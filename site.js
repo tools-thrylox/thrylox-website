@@ -7,6 +7,14 @@
     window.localStorage.setItem(key, JSON.stringify(items));
   }
 
+  function isLocalPreview() {
+    return (
+      window.location.protocol === "file:" ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    );
+  }
+
   function getDeviceId() {
     const storageKey = "thrylox-playtest-device-id";
     const existing = window.localStorage.getItem(storageKey);
@@ -20,6 +28,22 @@
         : "device-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 
     window.localStorage.setItem(storageKey, nextId);
+    return nextId;
+  }
+
+  function getSessionId() {
+    const storageKey = "thrylox-playtest-session-id";
+    const existing = window.sessionStorage.getItem(storageKey);
+    if (existing) {
+      return existing;
+    }
+
+    const nextId =
+      window.crypto && typeof window.crypto.randomUUID === "function"
+        ? window.crypto.randomUUID()
+        : "session-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+    window.sessionStorage.setItem(storageKey, nextId);
     return nextId;
   }
 
@@ -42,12 +66,7 @@
   }
 
   async function postSignup(payload) {
-    const isLocalPreview =
-      window.location.protocol === "file:" ||
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1";
-
-    if (!config.signupEndpoint || isLocalPreview) {
+    if (!config.signupEndpoint || isLocalPreview()) {
       saveDraft("thrylox-bog-playtest-signups", payload);
       return {
         ok: true,
@@ -134,6 +153,46 @@
     };
   }
 
+  function postFunnelEvent(eventName, trafficContext, deviceId, sessionId, data) {
+    const payload = {
+      type: "bog_onboarding_event",
+      project: config.projectName || "BOG",
+      timestamp: new Date().toISOString(),
+      source: window.location.href,
+      data: Object.assign(
+        {
+          eventName: eventName,
+          campaign: trafficContext.campaign,
+          utmSource: trafficContext.utmSource,
+          utmMedium: trafficContext.utmMedium,
+          utmCampaign: trafficContext.utmCampaign,
+          utmContent: trafficContext.utmContent,
+          fbclid: trafficContext.fbclid,
+          deviceId: deviceId,
+          sessionId: sessionId,
+          referrer: document.referrer || ""
+        },
+        data || {}
+      )
+    };
+
+    if (!config.signupEndpoint || isLocalPreview()) {
+      saveDraft("thrylox-bog-playtest-funnel-events", payload);
+      return Promise.resolve();
+    }
+
+    return fetch(config.signupEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function () {
+      return null;
+    });
+  }
+
   function updateOnboardingScale() {
     const app = document.querySelector(".figma-onboarding .onboarding-app");
     if (!app) {
@@ -209,7 +268,31 @@
     const formStepIndex = screens.findIndex(function (screen) {
       return screen.classList.contains("onboarding-form-screen");
     });
+    const trafficContext = readTrafficContext();
+    const deviceId = getDeviceId();
+    const sessionId = getSessionId();
+    const trackedStepEvents = new Set();
     var stepIndex = 0;
+
+    function trackFunnelEvent(eventName, data) {
+      return postFunnelEvent(eventName, trafficContext, deviceId, sessionId, data);
+    }
+
+    function trackStepView(screen, index) {
+      const stepNumber = index + 1;
+      const eventName = screen.dataset.funnelEvent || "onboarding_screen_" + stepNumber + "_viewed";
+      const eventKey = eventName + ":" + stepNumber;
+      if (trackedStepEvents.has(eventKey)) {
+        return;
+      }
+
+      trackedStepEvents.add(eventKey);
+      trackFunnelEvent(eventName, {
+        stepIndex: index,
+        stepNumber: stepNumber,
+        stepLabel: screen.dataset.funnelStep || "screen_" + stepNumber
+      });
+    }
 
     function setWizardStep(nextIndex) {
       stepIndex = Math.max(0, Math.min(nextIndex, screens.length - 1));
@@ -220,6 +303,7 @@
       });
 
       const activeScreen = screens[stepIndex];
+      trackStepView(activeScreen, stepIndex);
       const progressValue = Number(activeScreen.dataset.progress || stepIndex);
       dots.forEach(function (dot, index) {
         dot.classList.toggle("is-active", index <= progressValue);
@@ -272,13 +356,24 @@
     const inlineSuccess = document.getElementById("signup-success-panel");
     const inlineSuccessMessage = document.getElementById("inline-success-message");
     const inlineTestFlightLink = document.getElementById("inline-testflight-link");
-    const trafficContext = readTrafficContext();
     const submitButton = document.querySelector('[form="playtest-form"]');
-    const deviceId = getDeviceId();
 
     if (openLink) {
       openLink.href = config.publicTestFlightLink || "#";
     }
+
+    document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
+      link.addEventListener("click", function () {
+        trackFunnelEvent("testflight_link_clicked", {
+          email: emailField && emailField.value ? emailField.value.trim() : "",
+          linkUrl: link.href,
+          buttonId: link.id || "",
+          stepIndex: stepIndex,
+          stepNumber: stepIndex + 1,
+          stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
+        });
+      });
+    });
 
     function applySuccessState(result) {
       const inviteUrl = result.inviteUrl || config.publicTestFlightLink || "#";
@@ -337,7 +432,9 @@
           utmCampaign: trafficContext.utmCampaign,
           utmContent: trafficContext.utmContent,
           fbclid: trafficContext.fbclid,
-          deviceId: deviceId
+          deviceId: deviceId,
+          sessionId: sessionId,
+          referrer: document.referrer || ""
         }
       };
 
@@ -354,6 +451,12 @@
             pointCopy: "To protect inboxes and keep our email limit healthy, we do not send a new invite from the same device every time."
           });
           status.textContent = "Existing access found.";
+          trackFunnelEvent("device_access_reused", {
+            email: emailField.value.trim(),
+            stepIndex: stepIndex,
+            stepNumber: stepIndex + 1,
+            stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
+          });
           setWizardStep(formStepIndex);
           wizard.scrollIntoView({ behavior: "smooth", block: "start" });
           return;
