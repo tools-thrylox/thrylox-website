@@ -93,7 +93,18 @@ function createInviteToken() {
 }
 
 function buildDiscordTrackingUrl(request: Request, token: string) {
-  const url = new URL(request.url);
+  const configuredFunctionUrl = cleanText(Deno.env.get("PUBLIC_FUNCTION_URL"), 2000);
+  const supabaseUrl = cleanText(Deno.env.get("SUPABASE_URL"), 2000);
+  const url = configuredFunctionUrl
+    ? new URL(configuredFunctionUrl)
+    : supabaseUrl
+      ? new URL("/functions/v1/testflight-signup", supabaseUrl)
+      : new URL(request.url);
+
+  if (!url.pathname.includes("/functions/v1/")) {
+    url.pathname = "/functions/v1/testflight-signup";
+  }
+
   url.search = "";
   url.searchParams.set("action", "discord");
   url.searchParams.set("token", token);
