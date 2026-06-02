@@ -4,7 +4,7 @@ window.THRYLOX_SITE_CONFIG = {
   signupEndpoint: "https://hvmucdlsmqclxcuqsatg.supabase.co/functions/v1/testflight-signup",
   googleAdsConversionId: "AW-18205284580",
   googleAdsSignupConversionLabel: "",
-  googleAdsTestFlightClickConversionLabel: "",
+  googleAdsTestFlightClickConversionLabel: "TRkwCMagrbccEOSx-uhD",
   supportEmail: "raigred@thrylox.com",
   legalEmail: "admin@thrylox.com",
   companyDomain: "thrylox.com",

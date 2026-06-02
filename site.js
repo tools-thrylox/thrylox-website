@@ -235,6 +235,21 @@
     ));
   }
 
+  function gtagReportConversion(url) {
+    postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
+      value: 1.0,
+      currency: "EUR",
+      event_callback: function () {
+        if (typeof url !== "undefined") {
+          window.location = url;
+        }
+      }
+    });
+    return false;
+  }
+
+  window.gtag_report_conversion = gtagReportConversion;
+
   function updateOnboardingScale() {
     const app = document.querySelector(".figma-onboarding .onboarding-app");
     if (!app) {
@@ -406,11 +421,7 @@
 
     document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
       link.addEventListener("click", function () {
-        postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
-          event_callback: function () {},
-          value: 1,
-          currency: "EUR"
-        });
+        gtagReportConversion();
         trackFunnelEvent("testflight_link_clicked", {
           email: emailField && emailField.value ? emailField.value.trim() : "",
           linkUrl: link.href,
