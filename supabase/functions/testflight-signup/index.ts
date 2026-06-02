@@ -161,7 +161,19 @@ async function recordFunnelEvent(
     utm_medium: nullableText(data?.utmMedium, 240),
     utm_campaign: nullableText(data?.utmCampaign, 240),
     utm_content: nullableText(data?.utmContent, 240),
+    utm_term: nullableText(data?.utmTerm, 240),
     fbclid: nullableText(data?.fbclid, 500),
+    gclid: nullableText(data?.gclid, 500),
+    gbraid: nullableText(data?.gbraid, 500),
+    wbraid: nullableText(data?.wbraid, 500),
+    ttclid: nullableText(data?.ttclid, 500),
+    platform_campaign_id: nullableText(data?.platformCampaignId, 240),
+    platform_ad_group_id: nullableText(data?.platformAdGroupId, 240),
+    platform_ad_id: nullableText(data?.platformAdId, 240),
+    platform_creative_id: nullableText(data?.platformCreativeId, 240),
+    placement: nullableText(data?.placement, 240),
+    network: nullableText(data?.network, 120),
+    device: nullableText(data?.device, 120),
     step_index: nullableInteger(data?.stepIndex),
     step_number: nullableInteger(data?.stepNumber),
     step_label: nullableText(data?.stepLabel, 120),
@@ -528,7 +540,19 @@ Deno.serve(async (request) => {
     const utmMedium = String(body?.data?.utmMedium || "").trim();
     const utmCampaign = String(body?.data?.utmCampaign || "").trim();
     const utmContent = String(body?.data?.utmContent || "").trim();
+    const utmTerm = String(body?.data?.utmTerm || "").trim();
     const fbclid = String(body?.data?.fbclid || "").trim();
+    const gclid = String(body?.data?.gclid || "").trim();
+    const gbraid = String(body?.data?.gbraid || "").trim();
+    const wbraid = String(body?.data?.wbraid || "").trim();
+    const ttclid = String(body?.data?.ttclid || "").trim();
+    const platformCampaignId = String(body?.data?.platformCampaignId || "").trim();
+    const platformAdGroupId = String(body?.data?.platformAdGroupId || "").trim();
+    const platformAdId = String(body?.data?.platformAdId || "").trim();
+    const platformCreativeId = String(body?.data?.platformCreativeId || "").trim();
+    const placement = String(body?.data?.placement || "").trim();
+    const network = String(body?.data?.network || "").trim();
+    const device = String(body?.data?.device || "").trim();
     const deliveryMode = String(body?.deliveryMode || "email_plus_public_fallback").trim();
 
     if (requestType === "bog_onboarding_event") {
@@ -559,7 +583,19 @@ Deno.serve(async (request) => {
       utm_medium: utmMedium,
       utm_campaign: utmCampaign,
       utm_content: utmContent,
+      utm_term: utmTerm,
       fbclid,
+      gclid,
+      gbraid,
+      wbraid,
+      ttclid,
+      platform_campaign_id: platformCampaignId,
+      platform_ad_group_id: platformAdGroupId,
+      platform_ad_id: platformAdId,
+      platform_creative_id: platformCreativeId,
+      placement,
+      network,
+      device,
       delivery_mode: deliveryMode,
       latest_invite_url: publicInviteUrl,
       consent_timestamp: now,

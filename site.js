@@ -149,7 +149,19 @@
       utmMedium: params.get("utm_medium") || "",
       utmCampaign: params.get("utm_campaign") || "",
       utmContent: params.get("utm_content") || "",
-      fbclid: params.get("fbclid") || ""
+      utmTerm: params.get("utm_term") || "",
+      fbclid: params.get("fbclid") || "",
+      gclid: params.get("gclid") || "",
+      gbraid: params.get("gbraid") || "",
+      wbraid: params.get("wbraid") || "",
+      ttclid: params.get("ttclid") || "",
+      platformCampaignId: params.get("campaign_id") || params.get("campaignid") || "",
+      platformAdGroupId: params.get("ad_group_id") || params.get("adgroupid") || "",
+      platformAdId: params.get("ad_id") || params.get("adid") || "",
+      platformCreativeId: params.get("creative_id") || params.get("creative") || "",
+      placement: params.get("placement") || "",
+      network: params.get("network") || "",
+      device: params.get("device") || ""
     };
   }
 
@@ -167,7 +179,19 @@
           utmMedium: trafficContext.utmMedium,
           utmCampaign: trafficContext.utmCampaign,
           utmContent: trafficContext.utmContent,
+          utmTerm: trafficContext.utmTerm,
           fbclid: trafficContext.fbclid,
+          gclid: trafficContext.gclid,
+          gbraid: trafficContext.gbraid,
+          wbraid: trafficContext.wbraid,
+          ttclid: trafficContext.ttclid,
+          platformCampaignId: trafficContext.platformCampaignId,
+          platformAdGroupId: trafficContext.platformAdGroupId,
+          platformAdId: trafficContext.platformAdId,
+          platformCreativeId: trafficContext.platformCreativeId,
+          placement: trafficContext.placement,
+          network: trafficContext.network,
+          device: trafficContext.device,
           deviceId: deviceId,
           sessionId: sessionId,
           referrer: document.referrer || ""
@@ -191,6 +215,24 @@
     }).catch(function () {
       return null;
     });
+  }
+
+  function postGoogleAdsConversion(label, data) {
+    if (!label || typeof window.gtag !== "function") {
+      return;
+    }
+
+    const conversionId = config.googleAdsConversionId || "";
+    if (!conversionId) {
+      return;
+    }
+
+    window.gtag("event", "conversion", Object.assign(
+      {
+        send_to: conversionId + "/" + label
+      },
+      data || {}
+    ));
   }
 
   function updateOnboardingScale() {
@@ -364,6 +406,11 @@
 
     document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
       link.addEventListener("click", function () {
+        postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
+          event_callback: function () {},
+          value: 1,
+          currency: "EUR"
+        });
         trackFunnelEvent("testflight_link_clicked", {
           email: emailField && emailField.value ? emailField.value.trim() : "",
           linkUrl: link.href,
@@ -431,7 +478,19 @@
           utmMedium: trafficContext.utmMedium,
           utmCampaign: trafficContext.utmCampaign,
           utmContent: trafficContext.utmContent,
+          utmTerm: trafficContext.utmTerm,
           fbclid: trafficContext.fbclid,
+          gclid: trafficContext.gclid,
+          gbraid: trafficContext.gbraid,
+          wbraid: trafficContext.wbraid,
+          ttclid: trafficContext.ttclid,
+          platformCampaignId: trafficContext.platformCampaignId,
+          platformAdGroupId: trafficContext.platformAdGroupId,
+          platformAdId: trafficContext.platformAdId,
+          platformCreativeId: trafficContext.platformCreativeId,
+          placement: trafficContext.placement,
+          network: trafficContext.network,
+          device: trafficContext.device,
           deviceId: deviceId,
           sessionId: sessionId,
           referrer: document.referrer || ""
@@ -465,6 +524,11 @@
         const result = await postSignup(payload);
         status.textContent = result.emailSent ? "Invite sent. TestFlight link is ready." : "TestFlight link is ready.";
         rememberDeviceAccess(result.inviteUrl);
+        postGoogleAdsConversion(config.googleAdsSignupConversionLabel, {
+          value: 1,
+          currency: "EUR",
+          transaction_id: deviceId + ":" + sessionId
+        });
         applySuccessState(result);
         setWizardStep(formStepIndex);
         wizard.scrollIntoView({ behavior: "smooth", block: "start" });
