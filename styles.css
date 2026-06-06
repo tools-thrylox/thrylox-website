@@ -1753,6 +1753,112 @@ h3 {
   height: 92px;
 }
 
+.start-glow-onboarding .figma-start-button img {
+  position: relative;
+  z-index: 1;
+  animation: gallery-start-bulb-glow 3.15s ease-in-out infinite;
+  filter:
+    brightness(1.08)
+    saturate(1.12)
+    drop-shadow(0 0 7px rgba(255, 156, 31, 0.42));
+}
+
+.start-glow-onboarding .figma-start-button::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  top: 15%;
+  z-index: 2;
+  width: 68%;
+  height: 68%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(255, 248, 141, 0.98) 0%,
+      rgba(255, 214, 63, 0.82) 30%,
+      rgba(255, 136, 24, 0.48) 58%,
+      rgba(255, 96, 16, 0) 82%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: gallery-start-bulb-core 3.15s ease-in-out infinite;
+}
+
+.start-glow-onboarding .figma-start-button:active img,
+.start-glow-onboarding .figma-start-button.is-pressing img {
+  animation-play-state: paused;
+}
+
+.start-glow-onboarding .figma-start-button:active::after,
+.start-glow-onboarding .figma-start-button.is-pressing::after {
+  animation-play-state: paused;
+}
+
+@keyframes gallery-start-bulb-glow {
+  0%,
+  100% {
+    filter:
+      brightness(0.88)
+      saturate(0.94)
+      drop-shadow(0 0 2px rgba(255, 117, 20, 0.12));
+  }
+
+  24% {
+    filter:
+      brightness(1.15)
+      saturate(1.18)
+      drop-shadow(0 0 10px rgba(255, 150, 27, 0.48));
+  }
+
+  52% {
+    filter:
+      brightness(1.48)
+      saturate(1.32)
+      drop-shadow(0 0 22px rgba(255, 194, 56, 0.82));
+  }
+
+  76% {
+    filter:
+      brightness(1.12)
+      saturate(1.14)
+      drop-shadow(0 0 11px rgba(255, 142, 24, 0.48));
+  }
+}
+
+@keyframes gallery-start-bulb-core {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.78);
+  }
+
+  28% {
+    opacity: 0.56;
+    transform: scale(0.98);
+  }
+
+  54% {
+    opacity: 0.98;
+    transform: scale(1.24);
+  }
+
+  80% {
+    opacity: 0.48;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start-glow-onboarding .figma-start-button img {
+    animation: none;
+  }
+
+  .start-glow-onboarding .figma-start-button::after {
+    animation: none;
+  }
+}
+
 .gallery-onboarding .figma-shot-carousel {
   position: absolute;
   user-select: none;
