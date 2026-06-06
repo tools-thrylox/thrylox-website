@@ -1,5 +1,6 @@
 (function () {
   const config = window.THRYLOX_SITE_CONFIG || {};
+  const sentSessionEvents = new Set();
 
   function saveDraft(key, payload) {
     const items = JSON.parse(window.localStorage.getItem(key) || "[]");
@@ -235,6 +236,38 @@
     ));
   }
 
+  function markSessionEventSent(storageKey) {
+    if (sentSessionEvents.has(storageKey)) {
+      return false;
+    }
+
+    try {
+      if (window.sessionStorage.getItem(storageKey)) {
+        sentSessionEvents.add(storageKey);
+        return false;
+      }
+
+      window.sessionStorage.setItem(storageKey, "1");
+    } catch (error) {
+    }
+
+    sentSessionEvents.add(storageKey);
+    return true;
+  }
+
+  function trackEmailScreenViewOnce() {
+    if (!markSessionEventSent("thrylox-email-screen-view-sent")) {
+      return;
+    }
+
+    postGoogleAdsConversion(config.googleAdsEmailScreenConversionLabel);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "email_screen_view",
+      screen_name: "email_page"
+    });
+  }
+
   function gtagReportConversion(url) {
     postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
       value: 1.0,
@@ -336,6 +369,10 @@
     }
 
     function trackStepView(screen, index) {
+      if (screen.classList.contains("onboarding-form-screen")) {
+        trackEmailScreenViewOnce();
+      }
+
       const stepNumber = index + 1;
       const eventName = screen.dataset.funnelEvent || "onboarding_screen_" + stepNumber + "_viewed";
       const eventKey = eventName + ":" + stepNumber;
