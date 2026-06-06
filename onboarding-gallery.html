@@ -10,7 +10,8 @@
     window.gtag('js', new Date());
     window.gtag('config', 'AW-18205284580');
     (function(w,d,s,l,i){
-      var loaded = false;
+      var adsLoaded = false;
+      var tagManagerLoaded = false;
       var adsId = 'AW-18205284580';
       function appendScript(src) {
         var f = d.getElementsByTagName(s)[0];
@@ -19,32 +20,52 @@
         j.src = src;
         f.parentNode.insertBefore(j, f);
       }
-      function loadAnalytics() {
-        if (loaded) {
+      function loadGoogleAds() {
+        if (adsLoaded) {
           return;
         }
-        loaded = true;
+        adsLoaded = true;
+        appendScript('https://www.googletagmanager.com/gtag/js?id=' + adsId);
+      }
+      function loadTagManager() {
+        if (tagManagerLoaded) {
+          return;
+        }
+        tagManagerLoaded = true;
+        loadGoogleAds();
         w[l] = w[l] || [];
         w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
         appendScript('https://www.googletagmanager.com/gtm.js?id=' + i + (l != 'dataLayer' ? '&l=' + l : ''));
-        appendScript('https://www.googletagmanager.com/gtag/js?id=' + adsId);
       }
-      function scheduleAnalytics() {
+      function scheduleGoogleAds() {
+        var start = function() {
+          w.setTimeout(loadGoogleAds, 900);
+        };
+        if ('requestAnimationFrame' in w) {
+          w.requestAnimationFrame(function() {
+            w.requestAnimationFrame(start);
+          });
+        } else {
+          w.setTimeout(loadGoogleAds, 1200);
+        }
+      }
+      function scheduleTagManager() {
         w.setTimeout(function() {
           if ('requestIdleCallback' in w) {
-            w.requestIdleCallback(loadAnalytics, {timeout: 2000});
+            w.requestIdleCallback(loadTagManager, {timeout: 2000});
           } else {
-            loadAnalytics();
+            loadTagManager();
           }
         }, 6500);
       }
       ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
-        w.addEventListener(eventName, loadAnalytics, {once: true, passive: true});
+        w.addEventListener(eventName, loadTagManager, {once: true, passive: true});
       });
+      scheduleGoogleAds();
       if (d.readyState === 'complete') {
-        scheduleAnalytics();
+        scheduleTagManager();
       } else {
-        w.addEventListener('load', scheduleAnalytics, {once: true});
+        w.addEventListener('load', scheduleTagManager, {once: true});
       }
     })(window,document,'script','dataLayer','GTM-KHW6DX47');
   </script>
