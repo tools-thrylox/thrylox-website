@@ -262,7 +262,7 @@
       return;
     }
 
-    const scale = Math.min(viewportWidth / 393, viewportHeight / 852, 1);
+    const scale = Math.min(viewportWidth / 393, viewportHeight / 852);
     app.style.setProperty("--onboarding-scale", String(scale));
     app.style.width = 393 * scale + "px";
     app.style.height = 852 * scale + "px";

@@ -1021,7 +1021,7 @@ h3 {
   --figma-ink: #1c2037;
   --figma-paper: #fcf6bd;
   --figma-green: #26c588;
-  background: #1e1e1e;
+  background: var(--figma-paper);
   overflow: hidden;
 }
 
@@ -1036,6 +1036,7 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--figma-paper);
   overflow: hidden;
 }
 
