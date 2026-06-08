@@ -282,6 +282,16 @@
     });
   }
 
+  function trackGetGameClickOnce(position) {
+    if (!position || !markSessionEventSent("thrylox-get-game-clicked-" + position)) {
+      return;
+    }
+
+    pushDataLayerEvent("get_game_clicked", {
+      position: position
+    });
+  }
+
   function gtagReportConversion(url) {
     postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
       value: 1.0,
@@ -562,6 +572,15 @@
     wizard.querySelectorAll("[data-funnel-click]").forEach(function (button) {
       button.addEventListener("click", function () {
         const eventName = button.dataset.funnelClick || "";
+        const location = button.dataset.funnelLocation || "";
+        const getGamePositionByLocation = {
+          hero: "header",
+          email_form: "email_block"
+        };
+        if (eventName === "appstore_get_clicked") {
+          trackGetGameClickOnce(getGamePositionByLocation[location] || "");
+        }
+
         trackAppStoreEvent(eventName, {
           buttonId: button.id || "",
           buttonText: (button.textContent || button.getAttribute("aria-label") || "").trim(),
@@ -570,7 +589,7 @@
           stepIndex: stepIndex,
           stepNumber: stepIndex + 1,
           stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1),
-          location: button.dataset.funnelLocation || ""
+          location: location
         });
       });
     });
@@ -692,6 +711,17 @@
       }
     }
 
+    function scrollToSignupSuccess() {
+      const target = inlineSuccess || form;
+      if (!target || typeof target.scrollIntoView !== "function") {
+        return;
+      }
+
+      window.requestAnimationFrame(function () {
+        target.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      });
+    }
+
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
       status.textContent = "Preparing access...";
@@ -751,7 +781,7 @@
             stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
           });
           setWizardStep(formStepIndex);
-          wizard.scrollIntoView({ behavior: "smooth", block: "start" });
+          scrollToSignupSuccess();
           return;
         }
 
@@ -765,7 +795,7 @@
         });
         applySuccessState(result);
         setWizardStep(formStepIndex);
-        wizard.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollToSignupSuccess();
       } catch (error) {
         applySuccessState({
           emailSent: false,
@@ -778,7 +808,7 @@
         });
         status.textContent = "Direct TestFlight link is ready.";
         setWizardStep(formStepIndex);
-        wizard.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollToSignupSuccess();
       } finally {
         if (submitButton) {
           submitButton.removeAttribute("aria-busy");
