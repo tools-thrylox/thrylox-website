@@ -282,16 +282,6 @@
     });
   }
 
-  function trackGetGameClickOnce(position) {
-    if (!position || !markSessionEventSent("thrylox-get-game-clicked-" + position)) {
-      return;
-    }
-
-    pushDataLayerEvent("get_game_clicked", {
-      position: position
-    });
-  }
-
   function gtagReportConversion(url) {
     postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
       value: 1.0,
@@ -573,12 +563,8 @@
       button.addEventListener("click", function () {
         const eventName = button.dataset.funnelClick || "";
         const location = button.dataset.funnelLocation || "";
-        const getGamePositionByLocation = {
-          hero: "header",
-          email_form: "email_block"
-        };
         if (eventName === "appstore_get_clicked") {
-          trackGetGameClickOnce(getGamePositionByLocation[location] || "");
+          postGoogleAdsConversion("xXqfCNSmkbocEOSx-uhD");
         }
 
         trackAppStoreEvent(eventName, {
