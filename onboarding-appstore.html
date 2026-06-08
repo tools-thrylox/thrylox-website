@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Tag Manager / Google Ads queue -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+    window.gtag('js', new Date());
+    window.gtag('config', 'AW-18205284580');
+    (function(w,d,s,l,i){
+      var adsLoaded = false;
+      var tagManagerLoaded = false;
+      var adsId = 'AW-18205284580';
+      function appendScript(src) {
+        var f = d.getElementsByTagName(s)[0];
+        var j = d.createElement(s);
+        j.async = true;
+        j.src = src;
+        f.parentNode.insertBefore(j, f);
+      }
+      function loadGoogleAds() {
+        if (adsLoaded) {
+          return;
+        }
+        adsLoaded = true;
+        appendScript('https://www.googletagmanager.com/gtag/js?id=' + adsId);
+      }
+      function loadTagManager() {
+        if (tagManagerLoaded) {
+          return;
+        }
+        tagManagerLoaded = true;
+        loadGoogleAds();
+        w[l] = w[l] || [];
+        w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+        appendScript('https://www.googletagmanager.com/gtm.js?id=' + i + (l != 'dataLayer' ? '&l=' + l : ''));
+      }
+      function scheduleGoogleAds() {
+        var start = function() {
+          w.setTimeout(loadGoogleAds, 4200);
+        };
+        if ('requestAnimationFrame' in w) {
+          w.requestAnimationFrame(function() {
+            w.requestAnimationFrame(start);
+          });
+        } else {
+          w.setTimeout(loadGoogleAds, 1200);
+        }
+      }
+      function scheduleTagManager() {
+        w.setTimeout(function() {
+          if ('requestIdleCallback' in w) {
+            w.requestIdleCallback(loadTagManager, {timeout: 2000});
+          } else {
+            loadTagManager();
+          }
+        }, 6500);
+      }
+      ['pointerdown', 'keydown', 'touchstart'].forEach(function(eventName) {
+        w.addEventListener(eventName, loadTagManager, {once: true, passive: true});
+      });
+      scheduleGoogleAds();
+      if (d.readyState === 'complete') {
+        scheduleTagManager();
+      } else {
+        w.addEventListener('load', scheduleTagManager, {once: true});
+      }
+    })(window,document,'script','dataLayer','GTM-KHW6DX47');
+  </script>
+  <!-- End Google Tag Manager / Google Ads queue -->
+  <title>BOG - Download the Playtest Build</title>
+  <meta name="description" content="App Store style download page for the current BOG TestFlight playtest build.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23132052'/%3E%3Cellipse cx='32' cy='31' rx='25' ry='10' transform='rotate(-24 32 31)' fill='%2383d4c7'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='24' font-weight='700' fill='%23f7eebd'%3EBOG%3C/text%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="./assets/onboarding/hero-thrylox-appstore-640.webp" imagesrcset="./assets/onboarding/hero-thrylox-appstore-640.webp 640w, ./assets/onboarding/hero-thrylox-appstore-1280.webp 1280w" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/onboarding/video/bog-gameplay-carousel-poster.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="./onboarding-appstore.css?v=20260608-no-sidebar-a">
+  <script defer src="./config.js"></script>
+  <script defer src="./site.js?v=20260608-appstore-perf-a"></script>
+</head>
+<body class="appstore-onboarding">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KHW6DX47"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <main id="playtest-onboarding" class="appstore-page" aria-label="BOG download page">
+    <article class="appstore-main onboarding-screen onboarding-form-screen is-active" data-step="0" data-progress="0" data-funnel-step="download_page" data-funnel-event="appstore_download_page_viewed">
+      <section class="product-hero shelf" aria-labelledby="product-title">
+        <div class="product-hero-bg" aria-hidden="true"></div>
+        <div class="product-hero-inner">
+          <div class="product-icon" aria-hidden="true">
+            <img src="./assets/onboarding/bog-logo-psi.webp" width="210" height="112" decoding="async" alt="">
+          </div>
+          <div class="product-copy">
+            <h1 id="product-title">BOG</h1>
+            <p class="product-subtitle">Tactical AR duels on iPhone</p>
+            <p class="product-attributes">Free TestFlight build</p>
+            <div class="product-actions" aria-label="Download actions">
+              <a class="store-get-button" href="#download" data-funnel-click="appstore_get_clicked" data-funnel-location="hero">Get</a>
+              <button class="store-share-button" type="button" aria-label="Share BOG download page">
+                <span class="share-icon" aria-hidden="true"></span>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="informationRibbon" class="metric-ribbon shelf" aria-label="BOG quick facts">
+        <a class="metric-item" href="#ratings">
+          <span class="metric-label">Early Ratings</span>
+          <strong>4.8</strong>
+          <span class="metric-detail">First-wave testers</span>
+        </a>
+        <a class="metric-item" href="#information">
+          <span class="metric-label">Age Rating</span>
+          <strong>12+</strong>
+          <span class="metric-detail">Strategy combat</span>
+        </a>
+        <a class="metric-item" href="#information">
+          <span class="metric-label">Category</span>
+          <strong>Team Battler</strong>
+          <span class="metric-detail">Squad tactics</span>
+        </a>
+        <a class="metric-item" href="#information">
+          <span class="metric-label">Developer</span>
+          <strong>Thrylox</strong>
+          <span class="metric-detail">Independent studio</span>
+        </a>
+        <a class="metric-item" href="#information">
+          <span class="metric-label">Language</span>
+          <strong>EN</strong>
+          <span class="metric-detail">More planned</span>
+        </a>
+        <a class="metric-item" href="#information">
+          <span class="metric-label">Build</span>
+          <strong>Beta</strong>
+          <span class="metric-detail">TestFlight</span>
+        </a>
+      </section>
+
+      <section id="product-media" class="media-shelf shelf" aria-label="BOG gameplay video and screenshots">
+        <div class="media-scroll">
+          <video class="media-video" width="360" height="640" autoplay muted loop playsinline preload="none" poster="./assets/onboarding/video/bog-gameplay-carousel-poster.jpg" data-video-src="./assets/onboarding/video/bog-gameplay-carousel.mp4" data-video-type="video/mp4" aria-label="BOG gameplay highlight reel"></video>
+          <img src="./assets/onboarding/gallery/welcome-left.webp" width="360" height="640" loading="lazy" decoding="async" alt="BOG tactical duel screen">
+          <img src="./assets/onboarding/gallery/welcome-center.webp" width="360" height="640" loading="lazy" decoding="async" alt="BOG anomaly replay screen">
+          <img src="./assets/onboarding/gallery/welcome-right.webp" width="360" height="640" loading="lazy" decoding="async" alt="BOG character and lineup screen">
+          <img src="./assets/onboarding/gallery/step-center.webp" width="360" height="640" loading="lazy" decoding="async" alt="BOG command table screen">
+          <img src="./assets/onboarding/gallery/step-far-right.webp" width="360" height="640" loading="lazy" decoding="async" alt="BOG tactical lineup screen">
+        </div>
+        <p class="device-note">iPhone, iPad</p>
+      </section>
+
+      <section class="description-shelf shelf">
+        <p>
+          BOG is a tactical playtest where sanctioned AR-duels decide reputation, contracts, and who earns the next seat at the table.
+        </p>
+        <p>
+          Build a lineup, read the rival, draft around counters, and send us feedback while the game is still taking shape.
+        </p>
+      </section>
+
+      <section id="events" class="events-shelf shelf" aria-labelledby="events-title">
+        <h2 id="events-title">Events</h2>
+        <a class="event-card" href="#download">
+          <img src="./assets/onboarding/hero-thrylox-appstore-640.webp" srcset="./assets/onboarding/hero-thrylox-appstore-640.webp 640w, ./assets/onboarding/hero-thrylox-appstore-1280.webp 1280w" sizes="(min-width: 760px) 580px, calc(100vw - 50px)" width="1280" height="854" loading="lazy" decoding="async" alt="">
+          <span class="event-kicker">Now Available</span>
+          <strong>Public TestFlight wave is open</strong>
+          <span>Grab the build, play a few duels, and help tune the core loop before launch.</span>
+        </a>
+      </section>
+
+      <section id="ratings" class="ratings-shelf shelf" aria-labelledby="ratings-title">
+        <h2 id="ratings-title">Ratings & Reviews</h2>
+        <div class="rating-summary">
+          <div class="rating-score">
+            <strong>4.8</strong>
+            <span>out of 5</span>
+          </div>
+          <div class="rating-bars" aria-label="Rating distribution">
+            <span class="rating-stars">★★★★★</span>
+            <span class="bar bar-long"></span>
+            <span class="bar bar-mid"></span>
+            <span class="bar bar-short"></span>
+            <span class="bar bar-tiny"></span>
+          </div>
+          <p>Early playtest signal</p>
+        </div>
+        <div class="review-scroll" aria-label="Highlighted feedback">
+          <article class="review-card editor-card">
+            <h3>Editors' Note</h3>
+            <p>Team-battler decisions, roguelike risk, and AR-duel flavor make BOG easiest to understand once it is in your hands.</p>
+          </article>
+          <article class="review-card">
+            <h3>Playtester</h3>
+            <p>The strongest moments are when one counter changes the whole duel. Send us the parts that feel sharp or confusing.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="whats-new-shelf shelf" aria-labelledby="whats-new-title">
+        <h2 id="whats-new-title">What's New</h2>
+        <div class="version-row">
+          <span>Version 0.7 TestFlight</span>
+          <span>Preview build</span>
+        </div>
+        <ul>
+          <li>New onboarding path for fast conference and ad-funnel access.</li>
+          <li>Current duel loop, lineup choices, and anomaly runs are ready for external feedback.</li>
+          <li>Public TestFlight link is shown after email capture and reused on the same device.</li>
+        </ul>
+      </section>
+
+      <section id="download" class="download-shelf shelf" aria-labelledby="download-title">
+        <div class="download-header">
+          <h2 id="download-title">Get the Build</h2>
+          <p>Enter your email and unlock the TestFlight link immediately.</p>
+        </div>
+        <form id="playtest-form" class="appstore-download-form">
+          <label for="signup-email">Email</label>
+          <div class="email-row">
+            <input id="signup-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" data-funnel-email-event="appstore_email_entered" required>
+            <button form="playtest-form" class="store-get-button form-get-button" type="submit" data-funnel-click="appstore_get_clicked" data-funnel-location="email_form">Get</button>
+          </div>
+          <p class="legal-note">
+            By requesting access, you agree that Thrylox may use your email to manage playtest access and follow-up according to the
+            <a href="./privacy.html" target="_blank" rel="noopener">Privacy Notice</a> and
+            <a href="./terms.html" target="_blank" rel="noopener">Terms of Use</a>.
+          </p>
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+          <div id="signup-success-panel" class="signup-success-panel" hidden>
+            <h3>Access ready</h3>
+            <p id="inline-success-message">Your access link is ready.</p>
+            <a id="inline-testflight-link" class="store-get-button success-link" data-testflight-link data-funnel-event="appstore_testflight_after_email_clicked" href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener">
+              Open TestFlight
+            </a>
+            <p class="success-note">If TestFlight opens slowly, keep this page and tap the link again.</p>
+          </div>
+        </form>
+      </section>
+
+      <section id="privacyHeader" class="privacy-shelf shelf" aria-labelledby="privacy-title">
+        <h2 id="privacy-title">App Privacy</h2>
+        <p>
+          Thrylox uses email only to manage playtest access, follow up on feedback, and prevent repeated invite sends from the same email.
+        </p>
+        <div class="privacy-grid">
+          <article class="privacy-card">
+            <span class="privacy-icon" aria-hidden="true"></span>
+            <h3>Data Linked to You</h3>
+            <p>Email address for access and support.</p>
+          </article>
+          <article class="privacy-card">
+            <span class="privacy-icon" aria-hidden="true"></span>
+            <h3>Diagnostics</h3>
+            <p>Campaign and device context for funnel reliability.</p>
+          </article>
+          <article class="privacy-card">
+            <span class="privacy-icon" aria-hidden="true"></span>
+            <h3>Not Sold</h3>
+            <p>Your playtest signup is not sold to third parties.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="information" class="information-shelf shelf" aria-labelledby="information-title">
+        <h2 id="information-title">Information</h2>
+        <dl>
+          <div>
+            <dt>Seller</dt>
+            <dd>Thrylox</dd>
+          </div>
+          <div>
+            <dt>Category</dt>
+            <dd>Team Battler, Strategy</dd>
+          </div>
+          <div>
+            <dt>Compatibility</dt>
+            <dd>Requires TestFlight on iPhone or iPad.</dd>
+          </div>
+          <div>
+            <dt>Languages</dt>
+            <dd>English</dd>
+          </div>
+          <div>
+            <dt>Support</dt>
+            <dd><a data-support-email href="mailto:info@thrylox.com">info@thrylox.com</a></dd>
+          </div>
+        </dl>
+      </section>
+    </article>
+  </main>
+</body>
+</html>

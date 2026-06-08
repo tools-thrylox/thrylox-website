@@ -218,6 +218,20 @@
     });
   }
 
+  function pushDataLayerEvent(eventName, data) {
+    if (!eventName) {
+      return;
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign(
+      {
+        event: eventName
+      },
+      data || {}
+    ));
+  }
+
   function postGoogleAdsConversion(label, data) {
     if (!label || typeof window.gtag !== "function") {
       return;
@@ -295,10 +309,24 @@
       return;
     }
 
-    const scale = Math.min(viewportWidth / 393, viewportHeight / 852);
+    const activeScreen = app.querySelector(".onboarding-screen.is-active");
+    const step = activeScreen ? Number(activeScreen.dataset.step || 0) : 0;
+    const widthScale = viewportWidth / 393;
+    const fitScale = Math.min(widthScale, viewportHeight / 852);
+    const importantBaseBottomByStep = {
+      0: 735,
+      1: 735,
+      2: 792,
+      3: 820
+    };
+    const importantBaseBottom = importantBaseBottomByStep[step] || 852;
+    const canFillPhoneWidth = viewportWidth <= 540
+      && viewportHeight >= viewportWidth
+      && importantBaseBottom * widthScale <= viewportHeight;
+    const scale = canFillPhoneWidth ? widthScale : fitScale;
     app.style.setProperty("--onboarding-scale", String(scale));
     app.style.width = 393 * scale + "px";
-    app.style.height = 852 * scale + "px";
+    app.style.height = canFillPhoneWidth ? viewportHeight + "px" : 852 * scale + "px";
   }
 
   function triggerHapticFeedback(kind) {
@@ -344,6 +372,82 @@
     });
   }
 
+  function initLazyVideos() {
+    const videos = Array.from(document.querySelectorAll("video[data-video-src]"));
+    if (!videos.length) {
+      return;
+    }
+
+    function loadVideo(video) {
+      if (video.dataset.videoLoaded === "true") {
+        return;
+      }
+
+      const source = document.createElement("source");
+      source.src = video.dataset.videoSrc || "";
+      source.type = video.dataset.videoType || "video/mp4";
+      if (!source.src) {
+        return;
+      }
+
+      video.appendChild(source);
+      video.dataset.videoLoaded = "true";
+      video.load();
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(function () {
+          return null;
+        });
+      }
+    }
+
+    function startLoading() {
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            loadVideo(entry.target);
+            observer.unobserve(entry.target);
+          });
+        }, {
+          rootMargin: "240px 0px"
+        });
+
+        videos.forEach(function (video) {
+          observer.observe(video);
+        });
+        return;
+      }
+
+      videos.forEach(loadVideo);
+    }
+
+    var loadingStarted = false;
+    function startLoadingOnce() {
+      if (loadingStarted) {
+        return;
+      }
+
+      loadingStarted = true;
+      startLoading();
+    }
+
+    ["pointerdown", "touchstart", "keydown", "scroll"].forEach(function (eventName) {
+      window.addEventListener(eventName, startLoadingOnce, { once: true, passive: true });
+    });
+
+    window.setTimeout(function () {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(startLoadingOnce, { timeout: 1200 });
+      } else {
+        startLoadingOnce();
+      }
+    }, 3200);
+  }
+
   function initPlaytestForm() {
     const form = document.getElementById("playtest-form");
     const wizard = document.getElementById("playtest-onboarding");
@@ -368,6 +472,22 @@
       return postFunnelEvent(eventName, trafficContext, deviceId, sessionId, data);
     }
 
+    function trackAppStoreEvent(eventName, data) {
+      if (!eventName) {
+        return Promise.resolve();
+      }
+
+      pushDataLayerEvent(eventName, Object.assign(
+        {
+          page_path: window.location.pathname,
+          step_label: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
+        },
+        data || {}
+      ));
+
+      return trackFunnelEvent(eventName, data);
+    }
+
     function trackStepView(screen, index) {
       if (screen.classList.contains("onboarding-form-screen")) {
         trackEmailScreenViewOnce();
@@ -381,6 +501,14 @@
       }
 
       trackedStepEvents.add(eventKey);
+      if (eventName.indexOf("appstore_") === 0) {
+        pushDataLayerEvent(eventName, {
+          page_path: window.location.pathname,
+          step_index: index,
+          step_number: stepNumber,
+          step_label: screen.dataset.funnelStep || "screen_" + stepNumber
+        });
+      }
       trackFunnelEvent(eventName, {
         stepIndex: index,
         stepNumber: stepNumber,
@@ -398,6 +526,7 @@
 
       const activeScreen = screens[stepIndex];
       trackStepView(activeScreen, stepIndex);
+      updateOnboardingScale();
       const progressValue = Number(activeScreen.dataset.progress || stepIndex);
       dots.forEach(function (dot, index) {
         dot.classList.toggle("is-active", index <= progressValue);
@@ -417,6 +546,22 @@
     wizard.querySelectorAll("[data-next-step]").forEach(function (button) {
       button.addEventListener("click", function () {
         setWizardStep(stepIndex + 1);
+      });
+    });
+
+    wizard.querySelectorAll("[data-funnel-click]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const eventName = button.dataset.funnelClick || "";
+        trackAppStoreEvent(eventName, {
+          buttonId: button.id || "",
+          buttonText: (button.textContent || button.getAttribute("aria-label") || "").trim(),
+          eventResult: "clicked",
+          linkUrl: button.href || "",
+          stepIndex: stepIndex,
+          stepNumber: stepIndex + 1,
+          stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1),
+          location: button.dataset.funnelLocation || ""
+        });
       });
     });
 
@@ -458,8 +603,17 @@
 
     document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
       link.addEventListener("click", function () {
+        const eventName = link.dataset.funnelEvent || "testflight_link_clicked";
         gtagReportConversion();
-        trackFunnelEvent("testflight_link_clicked", {
+        if (eventName.indexOf("appstore_") === 0) {
+          pushDataLayerEvent(eventName, {
+            button_id: link.id || "",
+            link_url: link.href,
+            page_path: window.location.pathname,
+            step_label: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
+          });
+        }
+        trackFunnelEvent(eventName, {
           email: emailField && emailField.value ? emailField.value.trim() : "",
           linkUrl: link.href,
           buttonId: link.id || "",
@@ -469,6 +623,28 @@
         });
       });
     });
+
+    if (emailField) {
+      var appStoreEmailEnteredTracked = false;
+      emailField.addEventListener("input", function () {
+        const value = emailField.value.trim();
+        const eventName = emailField.dataset.funnelEmailEvent || "";
+        if (appStoreEmailEnteredTracked || !value || !eventName) {
+          return;
+        }
+
+        appStoreEmailEnteredTracked = true;
+        trackAppStoreEvent(eventName, {
+          fieldId: emailField.id || "",
+          emailLength: Math.min(value.length, 320),
+          emailHasAt: value.indexOf("@") !== -1,
+          eventResult: "entered",
+          stepIndex: stepIndex,
+          stepNumber: stepIndex + 1,
+          stepLabel: screens[stepIndex]?.dataset.funnelStep || "screen_" + (stepIndex + 1)
+        });
+      });
+    }
 
     function applySuccessState(result) {
       const inviteUrl = result.inviteUrl || config.publicTestFlightLink || "#";
@@ -618,6 +794,7 @@
     setProjectLinkTargets();
     updateOnboardingScale();
     initHapticFeedback();
+    initLazyVideos();
     initPlaytestForm();
   });
 

@@ -1,0 +1,834 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+.appstore-onboarding {
+  overflow-x: hidden;
+}
+
+.onboarding-screen[hidden] {
+  display: none;
+}
+
+.appstore-page {
+  min-height: 100vh;
+}
+
+.appstore-main {
+  min-height: 100vh;
+}
+
+.shelf {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.product-hero {
+  position: relative;
+  min-height: 186px;
+  overflow: hidden;
+  color: #fff;
+  background: #2d3340;
+}
+
+.product-hero-bg {
+  position: absolute;
+  inset: -18px;
+  background:
+    linear-gradient(90deg, rgba(15, 27, 42, 0.65), rgba(37, 45, 58, 0.28), rgba(73, 32, 84, 0.58)),
+    image-set(
+      url("./assets/onboarding/hero-thrylox-appstore-640.webp") 1x,
+      url("./assets/onboarding/hero-thrylox-appstore-1280.webp") 2x
+    ) center / cover;
+  filter: blur(10px) saturate(1.08);
+  transform: scale(1.06);
+}
+
+.product-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.12));
+}
+
+.product-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 186px;
+  padding: 24px 25px;
+}
+
+.product-icon {
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 22%),
+    linear-gradient(135deg, #bdf5dd, #97def5 35%, #23284d 70%, #070815);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
+}
+
+.product-icon img {
+  width: 104px;
+  height: auto;
+}
+
+.product-copy {
+  min-width: 0;
+}
+
+.product-copy h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+.product-subtitle,
+.product-attributes {
+  margin: 5px 0 0;
+  font-size: 13px;
+  line-height: 1.32;
+}
+
+.product-subtitle {
+  font-weight: 500;
+}
+
+.product-attributes {
+  opacity: 0.88;
+}
+
+.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.store-get-button,
+.store-share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.store-get-button {
+  min-width: 60px;
+  padding: 7px 16px;
+  background: #0071e3;
+  color: #fff;
+}
+
+.store-share-button {
+  gap: 6px;
+  padding: 7px 13px;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.share-icon {
+  position: relative;
+  width: 12px;
+  height: 14px;
+  border: 1.6px solid currentColor;
+  border-top: 0;
+  border-radius: 3px;
+}
+
+.share-icon::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -5px;
+  width: 1.6px;
+  height: 10px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.share-icon::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: -5px;
+  width: 6px;
+  height: 6px;
+  border-top: 1.6px solid currentColor;
+  border-left: 1.6px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.metric-ribbon {
+  display: grid;
+  grid-auto-columns: 132px;
+  grid-auto-flow: column;
+  overflow-x: auto;
+  padding: 18px 0 16px;
+  background: #f5f5f7;
+  scrollbar-width: none;
+}
+
+.metric-ribbon::-webkit-scrollbar,
+.media-scroll::-webkit-scrollbar,
+.review-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.metric-item {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  min-height: 64px;
+  padding: 0 12px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  color: #6e6e73;
+  text-align: center;
+  text-decoration: none;
+}
+
+.metric-item:last-child {
+  border-right: 0;
+}
+
+.metric-label,
+.metric-detail {
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.metric-detail {
+  text-transform: none;
+}
+
+.metric-item strong {
+  color: #1d1d1f;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.media-shelf {
+  padding: 16px 0 14px;
+  background: #f5f5f7;
+}
+
+.media-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 25px;
+  scroll-padding-left: 25px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.media-scroll img,
+.media-scroll video {
+  flex: 0 0 145px;
+  width: 145px;
+  height: 258px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  background: #111827;
+  object-fit: cover;
+  scroll-snap-align: start;
+}
+
+.media-scroll video {
+  overflow: hidden;
+}
+
+.device-note {
+  position: relative;
+  margin: 14px 25px 0;
+  padding-left: 42px;
+  color: #6e6e73;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.device-note::before,
+.device-note::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  border: 1.5px solid #6e6e73;
+  border-radius: 2px;
+}
+
+.device-note::before {
+  left: 0;
+  width: 9px;
+  height: 15px;
+}
+
+.device-note::after {
+  left: 20px;
+  width: 13px;
+  height: 17px;
+}
+
+.description-shelf,
+.events-shelf,
+.ratings-shelf,
+.whats-new-shelf,
+.download-shelf,
+.privacy-shelf,
+.information-shelf {
+  padding: 24px 25px;
+  background: #f5f5f7;
+}
+
+.description-shelf p {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.42;
+}
+
+.description-shelf p:last-child {
+  margin-bottom: 0;
+}
+
+.events-shelf h2,
+.ratings-shelf h2,
+.whats-new-shelf h2,
+.download-shelf h2,
+.privacy-shelf h2,
+.information-shelf h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.event-card {
+  position: relative;
+  display: grid;
+  min-height: 168px;
+  overflow: hidden;
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.event-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(9, 12, 22, 0.08), rgba(9, 12, 22, 0.72));
+}
+
+.event-card span,
+.event-card strong {
+  position: relative;
+  z-index: 1;
+  margin: 0 16px;
+  align-self: end;
+}
+
+.event-card .event-kicker {
+  align-self: start;
+  margin-top: 14px;
+  color: #d7ecff;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.event-card strong {
+  margin-top: auto;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.event-card span:last-child {
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.24;
+}
+
+.rating-summary {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 10px 16px;
+  align-items: end;
+}
+
+.rating-score strong {
+  display: block;
+  font-size: 56px;
+  line-height: 0.9;
+  font-weight: 800;
+}
+
+.rating-score span {
+  display: block;
+  margin-top: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rating-bars {
+  display: grid;
+  gap: 4px;
+  color: #6e6e73;
+}
+
+.rating-stars {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.bar {
+  display: block;
+  height: 2px;
+  border-radius: 999px;
+  background: #c7c7cc;
+}
+
+.bar-long {
+  width: 100%;
+  background: #1d1d1f;
+}
+
+.bar-mid {
+  width: 36%;
+}
+
+.bar-short {
+  width: 18%;
+}
+
+.bar-tiny {
+  width: 8%;
+}
+
+.rating-summary p {
+  grid-column: 2;
+  margin: -1px 0 0;
+  color: #6e6e73;
+  font-size: 13px;
+  text-align: right;
+}
+
+.review-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  margin: 20px -25px 0;
+  padding: 0 25px;
+  scrollbar-width: none;
+}
+
+.review-card {
+  flex: 0 0 298px;
+  min-height: 156px;
+  padding: 22px 20px;
+  border-radius: 8px;
+  background: #e8e8ed;
+}
+
+.review-card h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.review-card p {
+  margin: 0;
+  color: #3a3a3c;
+  font-size: 14px;
+  line-height: 1.38;
+}
+
+.editor-card h3 {
+  text-align: center;
+}
+
+.version-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  color: #6e6e73;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.whats-new-shelf ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #1d1d1f;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.whats-new-shelf li + li {
+  margin-top: 8px;
+}
+
+.download-shelf {
+  background: #fff;
+}
+
+.download-header p,
+.privacy-shelf > p {
+  margin: -7px 0 18px;
+  color: #3a3a3c;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.appstore-download-form label {
+  display: block;
+  margin-bottom: 7px;
+  color: #6e6e73;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.email-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.email-row input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d1d1f;
+  font-size: 16px;
+}
+
+.email-row input:focus {
+  border-color: #0071e3;
+  outline: 3px solid rgba(0, 113, 227, 0.18);
+}
+
+.form-get-button {
+  min-height: 44px;
+  min-width: 74px;
+}
+
+.legal-note,
+.form-status,
+.success-note {
+  margin: 12px 0 0;
+  color: #6e6e73;
+  font-size: 12px;
+  line-height: 1.36;
+}
+
+.legal-note a,
+.information-shelf a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.form-status {
+  min-height: 17px;
+}
+
+.signup-success-panel {
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 8px;
+  background: #f5f5f7;
+}
+
+.signup-success-panel[hidden] {
+  display: none;
+}
+
+.signup-success-panel h3 {
+  margin: 0 0 8px;
+  font-size: 19px;
+}
+
+.signup-success-panel p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.38;
+}
+
+.success-link {
+  margin-top: 14px;
+}
+
+.appstore-download-form.is-success label,
+.appstore-download-form.is-success .email-row,
+.appstore-download-form.is-success .legal-note,
+.appstore-download-form.is-success .form-status {
+  display: none;
+}
+
+.privacy-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.privacy-card {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 24px 18px;
+  border-radius: 8px;
+  background: #e8e8ed;
+  text-align: center;
+}
+
+.privacy-icon {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #0071e3;
+  border-radius: 10px;
+}
+
+.privacy-card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.privacy-card p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.36;
+}
+
+.information-shelf dl {
+  margin: 0;
+}
+
+.information-shelf dl > div {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.information-shelf dt {
+  color: #6e6e73;
+}
+
+.information-shelf dd {
+  margin: 0;
+}
+
+@media (min-width: 760px) {
+  .product-hero {
+    min-height: 285px;
+  }
+
+  .product-hero-inner {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 28px;
+    width: min(980px, calc(100vw - 80px));
+    min-height: 285px;
+    margin: 0 auto;
+    padding: 42px 0;
+  }
+
+  .product-icon {
+    width: 190px;
+    height: 190px;
+    border-radius: 40px;
+  }
+
+  .product-icon img {
+    width: 154px;
+  }
+
+  .product-copy h1 {
+    font-size: 36px;
+  }
+
+  .product-subtitle {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .product-attributes {
+    font-size: 14px;
+  }
+
+  .store-get-button,
+  .store-share-button {
+    min-height: 31px;
+    font-size: 14px;
+  }
+
+  .shelf:not(.product-hero) {
+    width: min(980px, calc(100vw - 80px));
+    margin: 0 auto;
+  }
+
+  .metric-ribbon {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-columns: unset;
+    grid-auto-flow: unset;
+    overflow: visible;
+    padding: 24px 0;
+  }
+
+  .metric-item strong {
+    font-size: 24px;
+  }
+
+  .media-shelf {
+    padding: 24px 0 20px;
+  }
+
+  .media-scroll {
+    gap: 20px;
+    padding: 0;
+  }
+
+  .media-scroll img,
+  .media-scroll video {
+    flex-basis: 220px;
+    width: 220px;
+    height: 391px;
+  }
+
+  .device-note {
+    margin-left: 0;
+  }
+
+  .description-shelf,
+  .events-shelf,
+  .ratings-shelf,
+  .whats-new-shelf,
+  .download-shelf,
+  .privacy-shelf,
+  .information-shelf {
+    padding: 28px 0;
+  }
+
+  .description-shelf p,
+  .download-header p,
+  .privacy-shelf > p {
+    max-width: 680px;
+    font-size: 15px;
+  }
+
+  .event-card {
+    max-width: 580px;
+  }
+
+  .review-scroll {
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .review-card {
+    flex-basis: 312px;
+  }
+
+  .download-shelf {
+    background: #f5f5f7;
+  }
+
+  .appstore-download-form {
+    max-width: 580px;
+  }
+
+  .privacy-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .information-shelf dl {
+    max-width: 760px;
+  }
+}
+
+@media (max-width: 374px) {
+  .product-hero-inner {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .product-icon {
+    width: 112px;
+    height: 112px;
+    border-radius: 24px;
+  }
+
+  .product-icon img {
+    width: 92px;
+  }
+
+  .product-copy h1 {
+    font-size: 19px;
+  }
+
+  .product-subtitle,
+  .product-attributes {
+    font-size: 12px;
+  }
+}
