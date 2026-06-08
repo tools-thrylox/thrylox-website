@@ -425,6 +425,16 @@
       videos.forEach(loadVideo);
     }
 
+    const priorityVideos = videos.filter(function (video) {
+      return video.dataset.videoPriority === "visible";
+    });
+
+    if (priorityVideos.length > 0) {
+      window.setTimeout(function () {
+        priorityVideos.forEach(loadVideo);
+      }, 650);
+    }
+
     var loadingStarted = false;
     function startLoadingOnce() {
       if (loadingStarted) {
