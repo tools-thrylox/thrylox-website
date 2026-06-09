@@ -274,7 +274,6 @@
       return;
     }
 
-    postGoogleAdsConversion(config.googleAdsEmailScreenConversionLabel);
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "email_screen_view",

@@ -3,7 +3,7 @@ window.THRYLOX_SITE_CONFIG = {
   publicTestFlightLink: "https://testflight.apple.com/join/g2C5saQ4",
   signupEndpoint: "https://hvmucdlsmqclxcuqsatg.supabase.co/functions/v1/testflight-signup",
   googleAdsConversionId: "AW-18205284580",
-  googleAdsEmailScreenConversionLabel: "xXqfCNSmkbocEOSx-uhD",
+  googleAdsEmailScreenConversionLabel: "",
   googleAdsSignupConversionLabel: "",
   googleAdsTestFlightClickConversionLabel: "TRkwCMagrbccEOSx-uhD",
   supportEmail: "raigred@thrylox.com",
