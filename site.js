@@ -548,7 +548,7 @@
         const eventName = button.dataset.funnelClick || "";
         const location = button.dataset.funnelLocation || "";
         if (eventName === "appstore_get_clicked") {
-          postGoogleAdsConversion("xXqfCNSmkbocEOSx-uhD");
+          postGoogleAdsConversion("J0_uCOiBuLscEOSx-uhD");
         }
 
         trackAppStoreEvent(eventName, {
