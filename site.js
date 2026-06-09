@@ -281,21 +281,6 @@
     });
   }
 
-  function gtagReportConversion(url) {
-    postGoogleAdsConversion(config.googleAdsTestFlightClickConversionLabel, {
-      value: 1.0,
-      currency: "EUR",
-      event_callback: function () {
-        if (typeof url !== "undefined") {
-          window.location = url;
-        }
-      }
-    });
-    return false;
-  }
-
-  window.gtag_report_conversion = gtagReportConversion;
-
   function updateOnboardingScale() {
     const app = document.querySelector(".figma-onboarding .onboarding-app");
     if (!app) {
@@ -618,7 +603,6 @@
     document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
       link.addEventListener("click", function () {
         const eventName = link.dataset.funnelEvent || "testflight_link_clicked";
-        gtagReportConversion();
         if (eventName.indexOf("appstore_") === 0) {
           pushDataLayerEvent(eventName, {
             button_id: link.id || "",
@@ -773,11 +757,6 @@
         const result = await postSignup(payload);
         status.textContent = result.emailSent ? "Invite sent. TestFlight link is ready." : "TestFlight link is ready.";
         rememberDeviceAccess(result.inviteUrl);
-        postGoogleAdsConversion(config.googleAdsSignupConversionLabel, {
-          value: 1,
-          currency: "EUR",
-          transaction_id: deviceId + ":" + sessionId
-        });
         applySuccessState(result);
         setWizardStep(formStepIndex);
         scrollToSignupSuccess();
