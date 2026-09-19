@@ -150,6 +150,49 @@
 @media(max-width:900px){.team-portfolio{margin-inline:0}}
 .team-story-section>.text-link+.text-link{margin-top:16px;margin-left:0;display:flex;width:fit-content}
 
+/* Roadmap option 02: one continuous route, with the current phase in amber. */
+.roadmap-route{margin-top:65px}
+.route-track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));list-style:none;margin:0 0 32px;padding:0}
+.route-phase{position:relative;padding:66px 26px 0 0}
+.route-phase::before{content:"";position:absolute;top:35px;left:0;right:0;height:1px;background:var(--line)}
+.route-phase:last-child::before{background:linear-gradient(90deg,var(--line),transparent)}
+.phase-past::before{background:var(--cyan)}
+.phase-current::before{background:linear-gradient(90deg,var(--amber),var(--line))}
+.route-mark{position:absolute;top:31px;left:0;z-index:1;width:9px;height:9px;border:1px solid var(--muted);background:var(--ink);border-radius:50%}
+.phase-past .route-mark{border-color:var(--cyan);background:var(--cyan)}
+.phase-current .route-mark{top:23px;width:25px;height:25px;border:7px solid var(--amber);background:var(--ink)}
+.route-phase-status{position:absolute;left:0;top:0;color:var(--muted);font-size:10px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase}
+.phase-current .route-phase-status{color:var(--amber)}
+.route-phase h3{font-family:var(--display);font-size:clamp(25px,2vw,34px);line-height:1.15;min-height:2.3em;margin:0}
+.route-phase h3 a:hover{color:var(--amber)}
+.phase-current h3{color:var(--amber)}
+.route-phase p{font-size:13px;line-height:1.75;color:var(--muted);margin:14px 0 0}
+.route-horizon{display:grid;grid-template-columns:1fr 4fr;margin:24px 0 0}
+.route-horizon>div{grid-column:2;border-top:1px solid var(--line);padding-top:15px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:7px 24px;font-size:11px;color:var(--muted)}
+.route-horizon strong{color:var(--cream);font-weight:400}
+@media(max-width:900px){
+ .route-phase{padding-right:16px}
+ .route-phase h3{font-size:25px}
+ .route-phase p{font-size:12px}
+ .route-phase-status{font-size:9px}
+}
+@media(max-width:700px){
+ .roadmap-route{margin-top:40px}
+ .route-track{display:block;margin-bottom:12px}
+ .route-phase{padding:0 0 30px 40px}
+ .route-phase::before{left:12px;top:8px;bottom:0;width:1px;height:auto;right:auto}
+ .route-phase:last-child::before{background:var(--line);bottom:30px}
+ .phase-current::before{background:linear-gradient(var(--amber),var(--line))}
+ .route-mark{top:8px;left:8px}
+ .phase-current .route-mark{top:0;left:0}
+ .route-phase-status{position:static;display:block;margin-bottom:9px;font-size:10px}
+ .route-phase h3{font-size:29px;min-height:0}
+ .route-phase h3 br,.route-phase p br{display:none}
+ .route-phase p{font-size:13px;margin-top:8px}
+ .route-horizon{display:block;margin-top:0}
+ .route-horizon>div{font-size:11px}
+}
+
 /* Roadmap: one current position, workstreams and the launch decision. */
 .editorial:has([data-story="roadmap"]){background:#fff}
 [data-story="roadmap"] .editorial-timeline{max-width:800px}
