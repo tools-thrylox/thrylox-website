@@ -119,7 +119,7 @@
 
   function setProjectLinkTargets() {
     document.querySelectorAll("[data-testflight-link]").forEach(function (node) {
-      node.href = config.publicTestFlightLink || "#";
+      node.href = config.publicTestFlightLink || node.getAttribute("href") || "#";
     });
 
     document.querySelectorAll("[data-support-email]").forEach(function (node) {
@@ -578,28 +578,7 @@
       });
     });
 
-    if (!form) {
-      setWizardStep(0);
-      return;
-    }
-
-    const status = document.getElementById("form-status");
-    const openLink = document.getElementById("open-testflight-link");
     const emailField = document.getElementById("signup-email");
-    const successKicker = document.getElementById("success-kicker");
-    const successTitle = document.getElementById("success-title");
-    const successMessage = document.getElementById("success-message");
-    const successPointTitle = document.getElementById("success-point-title");
-    const successPointCopy = document.getElementById("success-point-copy");
-    const inlineSuccess = document.getElementById("signup-success-panel");
-    const inlineSuccessMessage = document.getElementById("inline-success-message");
-    const inlineTestFlightLink = document.getElementById("inline-testflight-link");
-    const submitButton = document.querySelector('[form="playtest-form"]');
-
-    if (openLink) {
-      openLink.href = config.publicTestFlightLink || "#";
-    }
-
     document.querySelectorAll("[data-testflight-link]").forEach(function (link) {
       link.addEventListener("click", function () {
         const eventName = link.dataset.funnelEvent || "testflight_link_clicked";
@@ -621,6 +600,27 @@
         });
       });
     });
+
+    if (!form) {
+      setWizardStep(0);
+      return;
+    }
+
+    const status = document.getElementById("form-status");
+    const openLink = document.getElementById("open-testflight-link");
+    const successKicker = document.getElementById("success-kicker");
+    const successTitle = document.getElementById("success-title");
+    const successMessage = document.getElementById("success-message");
+    const successPointTitle = document.getElementById("success-point-title");
+    const successPointCopy = document.getElementById("success-point-copy");
+    const inlineSuccess = document.getElementById("signup-success-panel");
+    const inlineSuccessMessage = document.getElementById("inline-success-message");
+    const inlineTestFlightLink = document.getElementById("inline-testflight-link");
+    const submitButton = document.querySelector('[form="playtest-form"]');
+
+    if (openLink) {
+      openLink.href = config.publicTestFlightLink || "#";
+    }
 
     if (emailField) {
       var appStoreEmailEnteredTracked = false;

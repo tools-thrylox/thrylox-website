@@ -77,7 +77,7 @@
   <link rel="preload" as="image" href="./assets/onboarding/video/bog-gameplay-carousel-poster.jpg" fetchpriority="high">
   <link rel="stylesheet" href="./onboarding-appstore.css?v=20260608-not-sold-icon-a">
   <script defer src="./config.js"></script>
-  <script defer src="./site.js?v=20260609-get-conversion-new-label-a"></script>
+  <script defer src="./site.js?v=20260920-direct-testflight"></script>
 </head>
 <body class="appstore-onboarding">
   <!-- Google Tag Manager (noscript) -->
@@ -85,7 +85,7 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <main id="playtest-onboarding" class="appstore-page" aria-label="BOG download page">
-    <article class="appstore-main onboarding-screen onboarding-form-screen is-active" data-step="0" data-progress="0" data-funnel-step="download_page" data-funnel-event="appstore_download_page_viewed">
+    <article class="appstore-main onboarding-screen is-active" data-step="0" data-progress="0" data-funnel-step="download_page" data-funnel-event="appstore_download_page_viewed">
       <section class="product-hero shelf" aria-labelledby="product-title">
         <div class="product-hero-bg" aria-hidden="true"></div>
         <div class="product-hero-inner">
@@ -97,7 +97,7 @@
             <p class="product-subtitle">Tactical AR duels on iPhone</p>
             <p class="product-attributes">Free TestFlight build</p>
             <div class="product-actions" aria-label="Download actions">
-              <a class="store-get-button" href="#download" data-funnel-click="appstore_get_clicked" data-funnel-location="hero">Get</a>
+              <a class="store-get-button" href="https://testflight.apple.com/join/g2C5saQ4" data-testflight-link target="_blank" rel="noopener noreferrer" data-funnel-click="appstore_get_clicked" data-funnel-location="hero">Get</a>
               <button class="store-share-button" type="button" aria-label="Share BOG download page">
                 <svg class="share-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d="M12 3v12"></path>
@@ -137,7 +137,7 @@
           <strong>EN</strong>
           <span class="metric-detail">More planned</span>
         </a>
-        <a class="metric-item" href="#information">
+        <a class="metric-item" href="https://testflight.apple.com/join/g2C5saQ4" data-testflight-link target="_blank" rel="noopener noreferrer">
           <span class="metric-label">Build</span>
           <strong>Beta</strong>
           <span class="metric-detail">TestFlight</span>
@@ -179,7 +179,7 @@
 
       <section id="events" class="events-shelf shelf" aria-labelledby="events-title">
         <h2 id="events-title">Events</h2>
-        <a class="event-card" href="#download">
+        <a class="event-card" href="https://testflight.apple.com/join/g2C5saQ4" data-testflight-link target="_blank" rel="noopener noreferrer">
           <img src="./assets/onboarding/hero-thrylox-appstore-640.webp" srcset="./assets/onboarding/hero-thrylox-appstore-640.webp 640w, ./assets/onboarding/hero-thrylox-appstore-1280.webp 1280w" sizes="(min-width: 760px) 580px, calc(100vw - 50px)" width="1280" height="854" loading="lazy" decoding="async" alt="">
           <span class="event-kicker">Now Available</span>
           <strong>Public TestFlight wave is open</strong>
@@ -224,42 +224,29 @@
         <ul>
           <li>New onboarding path for fast conference and ad-funnel access.</li>
           <li>Current duel loop, lineup choices, and anomaly runs are ready for external feedback.</li>
-          <li>Public TestFlight link is shown after email capture and reused on the same device.</li>
+          <li>Open the public TestFlight build directly from any Get button.</li>
         </ul>
       </section>
 
       <section id="download" class="download-shelf shelf" aria-labelledby="download-title">
         <div class="download-header">
           <h2 id="download-title">Get the Build</h2>
-          <p>Enter your email and unlock the TestFlight link immediately.</p>
+          <p>Play the iOS demo through TestFlight.</p>
         </div>
-        <form id="playtest-form" class="appstore-download-form">
-          <label for="signup-email">Email</label>
-          <div class="email-row">
-            <input id="signup-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" data-funnel-email-event="appstore_email_entered" required>
-            <button form="playtest-form" class="store-get-button form-get-button" type="submit" data-funnel-click="appstore_get_clicked" data-funnel-location="email_form">Get</button>
-          </div>
+        <div class="appstore-download-form">
+          <a id="open-testflight-link" class="store-get-button success-link" data-testflight-link data-funnel-click="appstore_get_clicked" data-funnel-location="download" href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener noreferrer">Open TestFlight</a>
+          <p class="success-note">If TestFlight opens slowly, keep this page and tap the link again.</p>
           <p class="legal-note">
-            By requesting access, you agree that Thrylox may use your email to manage playtest access and follow-up according to the
             <a href="./privacy.html" target="_blank" rel="noopener">Privacy Notice</a> and
             <a href="./terms.html" target="_blank" rel="noopener">Terms of Use</a>.
           </p>
-          <p id="form-status" class="form-status" aria-live="polite"></p>
-          <div id="signup-success-panel" class="signup-success-panel" hidden>
-            <h3>Access ready</h3>
-            <p id="inline-success-message">Your access link is ready.</p>
-            <a id="inline-testflight-link" class="store-get-button success-link" data-testflight-link data-funnel-event="appstore_testflight_after_email_clicked" href="https://testflight.apple.com/join/g2C5saQ4" target="_blank" rel="noopener">
-              Open TestFlight
-            </a>
-            <p class="success-note">If TestFlight opens slowly, keep this page and tap the link again.</p>
-          </div>
-        </form>
+        </div>
       </section>
 
       <section id="privacyHeader" class="privacy-shelf shelf" aria-labelledby="privacy-title">
         <h2 id="privacy-title">App Privacy</h2>
         <p>
-          Thrylox uses email only to manage playtest access, follow up on feedback, and prevent repeated invite sends from the same email.
+          You can open the TestFlight build directly. See our Privacy Notice for details about playtest data and support.
         </p>
         <div class="privacy-grid">
           <article class="privacy-card">
@@ -270,7 +257,7 @@
               </svg>
             </span>
             <h3>Data Linked to You</h3>
-            <p>Email address for access and support.</p>
+            <p>Email address if you contact us for support.</p>
           </article>
           <article class="privacy-card">
             <span class="privacy-icon" aria-hidden="true">
