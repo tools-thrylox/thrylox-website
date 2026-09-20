@@ -1,5 +1,5 @@
 import { track } from './analytics.mjs';
-import { deriveRobotState } from './robot-state.mjs';
+import { deriveRobotState } from './robot-state.mjs?v=8b0fd15b274d';
 import { RobotRenderer } from './robot-renderer.mjs';
 
 export function initJourney() {

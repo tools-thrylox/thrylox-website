@@ -1,5 +1,5 @@
 import { initAnalytics } from './analytics.mjs';
-import { initJourney } from './navigation.mjs';
+import { initJourney } from './navigation.mjs?v=6d2adf754c13';
 import { initAtmosphere } from './atmosphere.mjs';
 import { initMedia } from './media.mjs?v=30bcad8dc587';
 
