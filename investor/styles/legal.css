@@ -1,0 +1,12 @@
+/* Legal pages share the site's editorial shell and reading typography. */
+.legal-longread .article-intro{margin-bottom:52px}
+.legal-longread .legal-section{padding-top:30px;border-top:1px solid #cbd1cc;margin-bottom:48px;scroll-margin-top:105px}
+.legal-longread .legal-section ul{margin:0 0 1.3em;padding-left:1.15em;font-family:var(--reading);font-size:21px;line-height:1.8;color:#354442}
+.legal-longread .legal-section li+li{margin-top:12px}
+.legal-longread .legal-section a{text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere}
+.legal-longread .legal-section a:hover{color:#234d3b}
+@media(max-width:760px){
+ .legal-longread .article-intro{margin-bottom:37px}
+ .legal-longread .legal-section{padding-top:24px;margin-bottom:36px}
+ .legal-longread .legal-section ul{font-size:18px;line-height:1.75}
+}
