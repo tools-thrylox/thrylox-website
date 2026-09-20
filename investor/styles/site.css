@@ -253,3 +253,14 @@
  .roadmap-gate>.eyebrow{font-size:8px}
  .gate-outcome{font-size:11px}
 }
+
+/* Explicit viewing is separate from the silent inline preview. */
+.preview-sound{display:inline-flex;align-items:center;gap:7px}
+video:fullscreen{width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:contain;background:#000}
+video:-webkit-full-screen{width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:contain;background:#000}
+body.video-viewer-open{overflow:hidden}
+.video-viewer{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;padding:0;background:#000;color:#fff;overflow:hidden}
+.video-viewer::backdrop{background:#000}
+.video-viewer[open]{display:grid;grid-template-rows:auto minmax(0,1fr);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.video-viewer-close{justify-self:end;min-height:44px;margin:8px 12px;padding:8px 12px;border:1px solid #ffffff80;background:#111;color:#fff;cursor:pointer;font-size:14px}
+.video-viewer>video{width:100%;height:100%;min-height:0;max-width:none;object-fit:contain}

@@ -1,7 +1,7 @@
 import { initAnalytics } from './analytics.mjs';
 import { initJourney } from './navigation.mjs';
 import { initAtmosphere } from './atmosphere.mjs';
-import { initMedia } from './media.mjs';
+import { initMedia } from './media.mjs?v=30bcad8dc587';
 
 initAnalytics();
 initJourney();
