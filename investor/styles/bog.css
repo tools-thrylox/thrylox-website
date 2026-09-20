@@ -62,6 +62,7 @@
 .bog-radar-legend>span:first-child{display:flex;align-items:center;gap:8px;font-weight:600;color:#234d3b;font-size:13px}
 .bog-radar-legend small{font-size:10px;font-weight:400}
 .bog-radar-axis-key{display:none}
+.bog-axis-note{display:block;margin-top:4px;font:10px/1.5 var(--body);color:var(--bog-muted)}
 .bog-score-details{border-block:1px solid var(--bog-rule)}
 .bog-score-details summary{font-size:12px;padding:14px 0;cursor:pointer;color:#354442;text-decoration:underline;text-underline-offset:4px}
 .bog-score-details table{margin-bottom:18px}
