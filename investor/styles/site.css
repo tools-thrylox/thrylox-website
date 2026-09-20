@@ -271,3 +271,14 @@ body.video-viewer-open{overflow:hidden}
 .video-viewer[open]{display:grid;grid-template-rows:auto minmax(0,1fr);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .video-viewer-close{justify-self:end;min-height:44px;margin:8px 12px;padding:8px 12px;border:1px solid #ffffff80;background:#111;color:#fff;cursor:pointer;font-size:14px}
 .video-viewer>video{width:100%;height:100%;min-height:0;max-width:none;object-fit:contain}
+
+/* A direct contact option beside the booking invitation. */
+.contact-email,.conversation-page .contact-email{margin:18px 0 0;font-family:var(--body);font-size:13px;line-height:1.8;color:var(--muted)}
+.email-link{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;overflow-wrap:anywhere}
+.contact-email .email-link{color:var(--white)}
+.contact-email .email-link:hover{color:var(--amber);text-decoration:underline}
+.editorial .contact-email{color:#526867}
+.editorial .contact-email .email-link{color:var(--ink)}
+.editorial .contact-email .email-link:hover{color:#456d71}
+.footer>.footer-links{flex-wrap:wrap;align-items:center;row-gap:14px}
+.footer .email-link{font-size:12px}
