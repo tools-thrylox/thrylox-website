@@ -280,3 +280,6 @@ body.video-viewer-open{overflow:hidden}
 .editorial .contact-email .email-link:hover{color:#456d71}
 .footer>.footer-links{flex-wrap:wrap;align-items:center;row-gap:14px}
 .footer .email-link{font-size:12px}
+
+/* Game stories share the same entry point in the Journey. */
+.game-deep-links{display:flex;flex-direction:column;align-items:flex-start;gap:22px}
