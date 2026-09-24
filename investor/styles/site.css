@@ -162,6 +162,8 @@
 .credit-item{display:flex;flex-direction:column;height:100%;color:var(--ink)}
 .credit-mark{height:70px;max-width:240px;display:flex;align-items:center;justify-content:flex-start;margin-bottom:12px}
 .credit-mark img{width:100%;max-height:56px;object-fit:contain;object-position:left center;filter:brightness(0);height:auto}
+/* Stacked artwork needs more height to balance the wide, single-line wordmarks. */
+.credit-mark--stacked img{width:172px;max-width:100%;max-height:84px;transform:translateY(-4px)}
 .credit-word{font-family:var(--reading);font-size:clamp(25px,2.7vw,38px);line-height:1;letter-spacing:-.035em}
 .credit-detail{font-size:10px;line-height:1.7;color:#455b5c}
 .credit-item:hover .credit-mark{opacity:.7}
@@ -169,6 +171,7 @@
  .credit-group--team-credits ul{grid-template-columns:repeat(2,minmax(0,1fr))}
  .credit-group ul{gap:26px}
  .credit-mark{height:50px;margin-bottom:14px;max-width:205px}
+ .credit-mark--stacked img{width:140px;max-height:68px}
 }
 @media(max-width:600px){
  .team-credits{display:block;margin-top:34px;padding-top:22px}
